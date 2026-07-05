@@ -1,6 +1,6 @@
 {
-  "name": "@madang/site",
-  "version": "0.0.1",
+  "name": "@profil/site",
+  "version": "0.1.0-dev.0",
   "private": true,
   "description": "포트폴리오 / 지식기반 / 이력서 탭을 담는 웹 템플릿 (M4에서 구현 시작)",
   "type": "module",

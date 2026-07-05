@@ -3,7 +3,7 @@
 // 이력 항목 목록: canonical model을 조립해 섹션별로 요약 출력한다.
 
 import { join } from "node:path";
-import { loadResumeModel, type ResumeModel } from "@madang/jari";
+import { loadResumeModel, type ResumeModel } from "@profil/jari";
 import { bold, dim, red } from "../report.js";
 
 export const LIST_SECTIONS = [
@@ -90,7 +90,7 @@ export async function runList(projectRoot: string, section?: string): Promise<bo
   }
 
   if (errors.length > 0) {
-    console.log(red(`⚠ 스키마 오류 ${errors.length}건 있음 — madang check로 확인하세요`));
+    console.log(red(`⚠ 스키마 오류 ${errors.length}건 있음 — profil check로 확인하세요`));
   }
   return true;
 }

@@ -1,4 +1,4 @@
-# @madang/site
+# @profil/site
 
 M4에서 구현 시작. 결정 필요 항목:
 
@@ -6,7 +6,7 @@ M4에서 구현 시작. 결정 필요 항목:
   (jyje/profile의 hydejack 기반과 직접 호환 — 마이그레이션 비용 최소화)
 - **지식기반 탭 초기 구현**: Quartz를 `/notes` 서브패스로 별도 빌드해 정적 임베드
   (빠른 시작) → 이후 자체 렌더러(remark-wiki-link + backlink 플러그인)로 교체
-- **이력서 탭**: `@madang/jari`가 생성한 HTML을 그대로 라우트에 마운트, 다운로드 버튼은
+- **이력서 탭**: `@profil/jari`가 생성한 HTML을 그대로 라우트에 마운트, 다운로드 버튼은
   `dist/`의 PDF/DOCX 링크
 
 ## 참고

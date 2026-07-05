@@ -1,7 +1,7 @@
-# madang.config.yaml
+# profil.config.yaml
 
 site:
-  name: "Madang"
+  name: "Profil"
   languages: [ko, en]
   default_language: ko
   tabs:

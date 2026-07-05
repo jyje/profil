@@ -1,7 +1,7 @@
 // packages/cli/src/checks/positions.test.ts
 
 import { describe, it, expect } from "vitest";
-import type { ResumeModel, ResumeEntry } from "@madang/jari";
+import type { ResumeModel, ResumeEntry } from "@profil/jari";
 import { checkPositionsIntegrity } from "./positions.js";
 
 function entry<T>(data: T, sourcePath = "test.md"): ResumeEntry<T> {

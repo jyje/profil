@@ -1,26 +1,25 @@
 <div align="center">
 
-# jyje/madang
+# jyje/profil
 
 AI-managed online presence for individuals and organizations —<br/>
 portfolio · knowledge base (Obsidian) · per-position resumes (HTML/PDF/DOCX), from a single content source
 
-[![build](https://github.com/jyje/madang/actions/workflows/build.yml/badge.svg)](https://github.com/jyje/madang/actions/workflows/build.yml)
-[![GitHub stars](https://img.shields.io/github/stars/jyje/madang?style=social)](https://github.com/jyje/madang/stargazers)
+[![build](https://github.com/jyje/profil/actions/workflows/build.yml/badge.svg)](https://github.com/jyje/profil/actions/workflows/build.yml)
+[![GitHub stars](https://img.shields.io/github/stars/jyje/profil?style=social)](https://github.com/jyje/profil/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 [English](README.md) / [한국어](README-ko.md)
 
 </div>
 
-If this project helps you build your own madang, consider leaving a ⭐!
+If this project helps you build your own profil, consider leaving a ⭐!
 
 ## Overview
 
-*Madang* (마당) is the open courtyard of a traditional Korean house — the place where
-you welcome guests and lay out what you have to show. This project gathers your
-scattered portfolio, knowledge-base blog (Quartz-style), and resume builder into
-**one madang**.
+**Profil** is your profile, the European way — one content source that drives
+everything you show the world. This project gathers your scattered portfolio,
+knowledge-base blog (Quartz-style), and resume builder into one place.
 
 - **Single source of truth**: structured Markdown under `content/` drives everything
 - **Multi-format output**: web pages, PDF, and DOCX derive from the same data
@@ -30,7 +29,7 @@ scattered portfolio, knowledge-base blog (Quartz-style), and resume builder into
 ## Monorepo structure
 
 ```
-madang/
+profil/
 ├── AGENTS.md            # Working conventions for AI agents (Claude Code, etc.)
 ├── design/
 │   ├── tokens.yaml       # Colors/typography/spacing — single design truth
@@ -47,9 +46,9 @@ madang/
 │   └── notes/            # Obsidian vault (knowledge-base tab)
 ├── packages/
 │   ├── jari/              # Resume engine: parse → model → render(html/pdf/docx)
-│   ├── cli/               # Internal CLI: madang init / check / clean
+│   ├── cli/               # Internal CLI: profil init / check / add / list / remove / clean
 │   └── site/               # Web template (portfolio/notes/resume tabs)
-├── madang.config.yaml     # Languages, tabs, deploy target
+├── profil.config.yaml     # Languages, tabs, deploy target
 └── dist/                  # Build outputs: {name}-{position}-{lang}.{pdf,docx}
 ```
 
@@ -64,31 +63,35 @@ them naturally to your portfolio and knowledge base.
 ## Quick start
 
 ```bash
-git clone https://github.com/jyje/madang.git && cd madang
+git clone https://github.com/jyje/profil.git && cd profil
 npm install         # packages/{jari,cli} build automatically on install (prepare)
-npm run check       # static tests: tsc build + vitest + madang check
+npm run check       # static tests: tsc build + vitest + profil check
 npm run dev        # local preview (M4)
 npm run build       # full HTML + PDF + DOCX matrix build (M2)
 ```
 
-## Internal CLI (`madang`)
+## Internal CLI (`profil`)
 
 ```bash
-npx madang init            # fully initialize a project in the current directory (scaffold + check)
-npx madang init --home     # initialize the user data home (~/.madang) instead
-npx madang init --force    # regenerate madang.config.yaml, content/resume, dist from templates
+npx profil init            # fully initialize a project in the current directory (scaffold + check)
+npx profil init --home     # initialize the user data home (~/.profil) instead
+npx profil init --force    # regenerate profil.config.yaml, content/resume, dist from templates
                            # (content/notes and content/portfolio are never overwritten)
-npx madang check           # static checks: config/content schemas, position tags, wikilink integrity
-npx madang list [section]  # list resume entries (experience|projects|education|positions|skills)
-npx madang add experience --company "ACME" --role "Engineer" --start 2024-01 --positions mlops
-npx madang remove experience/acme.md   # paths are relative to content/resume
-npx madang clean [--deep]  # remove build outputs (--deep: node_modules too)
+npx profil check           # static checks: config/content schemas, position tags, wikilink integrity
+npx profil list [section]  # list resume entries (experience|projects|education|positions|skills)
+npx profil add experience --company "ACME" --role "Engineer" --start 2024-01 --positions mlops
+npx profil remove experience/acme.md   # paths are relative to content/resume
+npx profil clean [--deep]  # remove build outputs (--deep: node_modules too)
 ```
 
-**Data home** — when installed as a local tool, user data lives in `~/.madang/`
-(`$HOME/.madang` on macOS/Linux, `%USERPROFILE%\.madang` on Windows; override with
-`MADANG_HOME`). Every command resolves its project root as: `--root <dir>` flag →
-walk up from the current directory → fall back to `~/.madang`.
+**Data home** — when installed as a local tool, user data lives in `~/.profil/`
+(`$HOME/.profil` on macOS/Linux, `%USERPROFILE%\.profil` on Windows). **Development
+builds use `~/.profil-dev/`** so they never touch your real data — a build counts as
+development when the version has a prerelease tag (e.g. `0.1.0-dev.0`), when
+`NODE_ENV=development`, or when `PROFIL_DEV=1` (`PROFIL_DEV=0` forces release mode).
+`PROFIL_HOME` overrides the location entirely. Every command resolves its project
+root as: `--root <dir>` flag → walk up from the current directory → fall back to the
+data home.
 
 CI (`.github/workflows/build.yml`) runs the same single entry point: `npm run check`.
 See `packages/cli/README.md` for the full list of checks.
@@ -98,7 +101,7 @@ See `packages/cli/README.md` for the full list of checks.
 - **M1** — Jari core: md parser, zod schema, canonical model, basic HTML renderer
 - **M2** — Output matrix: PDF (Playwright), DOCX (Pandoc), build CLI, CI artifacts
 - **M3** — Position variants + AI harness: position views, link integrity, agent workflow
-- **M4** — Madang site integration: portfolio/notes tabs, self-hosted/cloud deployment
+- **M4** — Site integration: portfolio/notes tabs, self-hosted/cloud deployment
 
 ## License
 

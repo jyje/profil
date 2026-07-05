@@ -2,7 +2,7 @@
 //
 // 검사 결과 출력 헬퍼. 색상은 TTY이고 NO_COLOR가 없을 때만 사용한다.
 
-import type { ContentIssue } from "@madang/jari";
+import type { ContentIssue } from "@profil/jari";
 
 const useColor = process.stdout.isTTY === true && !process.env.NO_COLOR;
 

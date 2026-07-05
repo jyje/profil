@@ -4,14 +4,14 @@
 // 오류를 전부 수집해 한 번에 보고하고, 하나라도 있으면 false를 반환한다.
 
 import { join } from "node:path";
-import { loadResumeModel } from "@madang/jari";
+import { loadResumeModel } from "@profil/jari";
 import { loadConfig, CONFIG_FILENAME } from "../config.js";
 import { checkPositionsIntegrity } from "../checks/positions.js";
 import { checkWikilinks } from "../checks/wikilinks.js";
 import { printSection, printWarnings, bold, red, green } from "../report.js";
 
 export async function runCheck(projectRoot: string): Promise<boolean> {
-  console.log(bold(`madang check — ${projectRoot}`));
+  console.log(bold(`profil check — ${projectRoot}`));
   console.log();
 
   let errorCount = 0;

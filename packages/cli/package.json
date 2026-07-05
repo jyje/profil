@@ -1,10 +1,10 @@
 {
-  "name": "@madang/cli",
-  "version": "0.0.1",
-  "description": "Madang 내부 CLI — 완전 초기화(init), 정적 검사(check), 산출물 정리(clean)",
+  "name": "@profil/cli",
+  "version": "0.1.0-dev.0",
+  "description": "Profil 내부 CLI — 완전 초기화(init), 정적 검사(check), 산출물 정리(clean)",
   "type": "module",
   "bin": {
-    "madang": "./dist/index.js"
+    "profil": "./dist/index.js"
   },
   "main": "./dist/index.js",
   "scripts": {
@@ -13,7 +13,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
-    "@madang/jari": "0.0.1",
+    "@profil/jari": "0.1.0-dev.0",
     "yaml": "^2.4.5",
     "zod": "^3.23.8"
   },

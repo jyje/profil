@@ -10,7 +10,7 @@ import { runCheck } from "./check.js";
 import { bold, dim, green, red } from "../report.js";
 
 export async function runRemove(projectRoot: string, relPath: string): Promise<boolean> {
-  console.log(bold(`madang remove — ${projectRoot}`));
+  console.log(bold(`profil remove — ${projectRoot}`));
   console.log();
 
   const resumeRoot = resolve(projectRoot, "content/resume");

@@ -3,23 +3,60 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { homedir } from "node:os";
 import { join } from "node:path";
-import { madangHome } from "./paths.js";
+import { appHome, isDevBuild, CLI_VERSION } from "./paths.js";
 
-const ORIGINAL = process.env.MADANG_HOME;
+const SAVED = {
+  home: process.env.PROFIL_HOME,
+  dev: process.env.PROFIL_DEV,
+  nodeEnv: process.env.NODE_ENV,
+};
 
 afterEach(() => {
-  if (ORIGINAL === undefined) delete process.env.MADANG_HOME;
-  else process.env.MADANG_HOME = ORIGINAL;
+  for (const [env, value] of [
+    ["PROFIL_HOME", SAVED.home],
+    ["PROFIL_DEV", SAVED.dev],
+    ["NODE_ENV", SAVED.nodeEnv],
+  ] as const) {
+    if (value === undefined) delete process.env[env];
+    else process.env[env] = value;
+  }
 });
 
-describe("madangHome", () => {
-  it("기본값은 홈 디렉토리의 .madang", () => {
-    delete process.env.MADANG_HOME;
-    expect(madangHome()).toBe(join(homedir(), ".madang"));
+describe("isDevBuild", () => {
+  it("PROFIL_DEV가 최우선이다 (0/false는 릴리스 취급)", () => {
+    process.env.PROFIL_DEV = "1";
+    expect(isDevBuild()).toBe(true);
+    process.env.PROFIL_DEV = "0";
+    expect(isDevBuild()).toBe(false);
+    process.env.PROFIL_DEV = "false";
+    expect(isDevBuild()).toBe(false);
   });
 
-  it("MADANG_HOME 환경변수로 재정의할 수 있다", () => {
-    process.env.MADANG_HOME = "/tmp/custom-madang";
-    expect(madangHome()).toBe("/tmp/custom-madang");
+  it("NODE_ENV=development면 개발 버전이다", () => {
+    delete process.env.PROFIL_DEV;
+    process.env.NODE_ENV = "development";
+    expect(isDevBuild()).toBe(true);
+  });
+
+  it("prerelease 버전(0.1.0-dev.0 등)은 개발 버전으로 판정된다", () => {
+    delete process.env.PROFIL_DEV;
+    delete process.env.NODE_ENV;
+    expect(isDevBuild()).toBe(CLI_VERSION.includes("-"));
+  });
+});
+
+describe("appHome", () => {
+  it("개발 버전은 ~/.profil-dev, 릴리스는 ~/.profil", () => {
+    delete process.env.PROFIL_HOME;
+    process.env.PROFIL_DEV = "1";
+    expect(appHome()).toBe(join(homedir(), ".profil-dev"));
+    process.env.PROFIL_DEV = "0";
+    expect(appHome()).toBe(join(homedir(), ".profil"));
+  });
+
+  it("PROFIL_HOME 환경변수가 있으면 무조건 그 값을 쓴다", () => {
+    process.env.PROFIL_HOME = "/tmp/custom-profil";
+    process.env.PROFIL_DEV = "1"; // dev여도 override가 이긴다
+    expect(appHome()).toBe("/tmp/custom-profil");
   });
 });

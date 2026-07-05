@@ -13,7 +13,7 @@ import {
   ProjectSchema,
   EducationSchema,
   PositionSchema,
-} from "@madang/jari";
+} from "@profil/jari";
 import { runCheck } from "./check.js";
 import { bold, dim, green, red } from "../report.js";
 
@@ -169,7 +169,7 @@ export async function runAdd(
   type: AddType,
   opts: AddOptions,
 ): Promise<boolean> {
-  console.log(bold(`madang add ${type} — ${projectRoot}`));
+  console.log(bold(`profil add ${type} — ${projectRoot}`));
   console.log();
 
   const { relPath, content, errors } = buildEntry(type, opts);

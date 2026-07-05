@@ -9,7 +9,7 @@ import { readdir } from "node:fs/promises";
 import { bold, dim, green } from "../report.js";
 
 export async function runClean(projectRoot: string, deep: boolean): Promise<boolean> {
-  console.log(bold(`madang clean — ${projectRoot}${deep ? " (--deep)" : ""}`));
+  console.log(bold(`profil clean — ${projectRoot}${deep ? " (--deep)" : ""}`));
 
   const targets = [join(projectRoot, "dist")];
 

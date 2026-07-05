@@ -1,4 +1,4 @@
-# @madang/jari
+# @profil/jari
 
 구조화 마크다운(`content/resume/**/*.md`)을 단일 소스로, HTML/PDF/DOCX 이력서를 생성하는 엔진.
 
@@ -11,7 +11,7 @@
 
 ### M1 — 코어
 - [x] `loader.ts`의 `loadResumeModel(contentDir)` 구현: 디렉토리 전체 스캔 → canonical model 조립
-      (오류는 throw 대신 전부 수집 — `@madang/cli`의 `check` 명령이 보고)
+      (오류는 throw 대신 전부 수집 — `@profil/cli`의 `check` 명령이 보고)
 - [ ] round-trip 테스트: md → model → md 재생성 시 내용 손실 없음을 검증
 - [ ] `render/html.ts`: canonical model → 단일 HTML 페이지 (디자인 토큰 CSS 변수 사용)
 - [ ] `positions/*.md` 필터링 로직: 태그+weight로 경력/프로젝트 정렬
@@ -25,8 +25,8 @@
 ## 사용 예 (M1 완료 후 목표 API)
 
 ```ts
-import { loadResumeModel } from "@madang/jari";
-import { renderHtml } from "@madang/jari/render/html";
+import { loadResumeModel } from "@profil/jari";
+import { renderHtml } from "@profil/jari/render/html";
 
 const model = await loadResumeModel("./content/resume");
 const html = renderHtml(model, { position: "mlops", lang: "ko" });

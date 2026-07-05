@@ -74,4 +74,4 @@ export async function parseContentFile(filePath: string): Promise<ParsedContent>
 }
 
 // loadResumeModel(contentDir)은 loader.ts에 구현되어 있다.
-// 위키링크 존재 여부 검증은 @madang/cli의 check 명령이 수행한다.
+// 위키링크 존재 여부 검증은 @profil/cli의 check 명령이 수행한다.

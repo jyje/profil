@@ -1,15 +1,16 @@
 // packages/cli/src/config.ts
 //
-// madang.config.yaml 로더 + zod 스키마. 이 스키마가 설정 구조의 단일 진실이다.
+// profil.config.yaml 로더 + zod 스키마. 이 스키마가 설정 구조의 단일 진실이다.
 
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
-import type { ContentIssue } from "@madang/jari";
+import type { ContentIssue } from "@profil/jari";
 
-export const CONFIG_FILENAME = "madang.config.yaml";
+export { CONFIG_FILENAME } from "./app.js";
+import { CONFIG_FILENAME } from "./app.js";
 
 const TabSchema = z.object({
   id: z.string(),

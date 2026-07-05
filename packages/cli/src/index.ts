@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-// packages/cli/src/index.ts — madang CLI 진입점
+// packages/cli/src/index.ts — profil CLI 진입점
 
 import { parseArgs } from "node:util";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { CLI_PKG_ROOT, madangHome, resolveProjectRoot } from "./paths.js";
+import { CLI_PKG_ROOT, appHome, resolveProjectRoot } from "./paths.js";
 import { runInit } from "./commands/init.js";
 import { runCheck } from "./commands/check.js";
 import { runClean } from "./commands/clean.js";
@@ -13,7 +13,7 @@ import { runList } from "./commands/list.js";
 import { runRemove } from "./commands/remove.js";
 import { bold, dim, red } from "./report.js";
 
-// `madang list | head` 처럼 파이프가 먼저 닫혀도 크래시하지 않도록
+// `profil list | head` 처럼 파이프가 먼저 닫혀도 크래시하지 않도록
 for (const stream of [process.stdout, process.stderr]) {
   stream.on("error", (e: NodeJS.ErrnoException) => {
     if (e.code === "EPIPE") process.exit(0);
@@ -21,28 +21,28 @@ for (const stream of [process.stdout, process.stderr]) {
   });
 }
 
-const USAGE = `${bold("madang")} — Madang 프로젝트 내부 CLI
+const USAGE = `${bold("profil")} — Profil 프로젝트 내부 CLI
 
 사용법:
-  madang init [--force] [--home]
+  profil init [--force] [--home]
       프로젝트 완전 초기화 (템플릿 스캐폴드 + 검사). 기본은 현재 디렉토리,
-      --home이면 사용자 데이터 홈(~/.madang, MADANG_HOME으로 재정의 가능)에 초기화.
-      --force: madang.config.yaml, content/resume, dist를 지우고 재생성
+      --home이면 사용자 데이터 홈(~/.profil, PROFIL_HOME으로 재정의 가능)에 초기화.
+      --force: profil.config.yaml, content/resume, dist를 지우고 재생성
       (content/notes, content/portfolio는 절대 덮어쓰지 않음)
 
-  madang check              정적 검사: 설정/콘텐츠 스키마, 포지션 태그·위키링크 무결성
-  madang list [섹션]         이력 목록 (experience|projects|education|positions|skills)
-  madang add <type> [플래그]  이력 항목 추가 (experience|project|education|position)
+  profil check              정적 검사: 설정/콘텐츠 스키마, 포지션 태그·위키링크 무결성
+  profil list [섹션]         이력 목록 (experience|projects|education|positions|skills)
+  profil add <type> [플래그]  이력 항목 추가 (experience|project|education|position)
       공통:      [--lang ko|en] [--slug <파일명>] [--positions mlops,backend]
       experience: --company --role --start YYYY-MM [--end YYYY-MM|present] [--location]
       project:    --title [--role] [--url] [--start] [--end]
       education:  --institution --start [--end] [--degree]
       position:   --title [--slug] [--headline]
-  madang remove <경로>        이력 항목 삭제 (content/resume 기준, 예: experience/acme.md)
-  madang clean [--deep]      dist/, packages/*/dist 삭제 (--deep: node_modules까지)
+  profil remove <경로>        이력 항목 삭제 (content/resume 기준, 예: experience/acme.md)
+  profil clean [--deep]      dist/, packages/*/dist 삭제 (--deep: node_modules까지)
 
 공통 옵션:
-  --root <dir>              대상 프로젝트 루트를 명시 (기본: cwd 상향 탐색 → ~/.madang)
+  --root <dir>              대상 프로젝트 루트를 명시 (기본: cwd 상향 탐색 → ~/.profil)
   -h, --help                도움말
   -v, --version             버전
 `;
@@ -50,9 +50,9 @@ const USAGE = `${bold("madang")} — Madang 프로젝트 내부 CLI
 function requireRoot(rootFlag?: string): string | null {
   const root = resolveProjectRoot(rootFlag);
   if (!root) {
-    console.error(red("madang 프로젝트를 찾을 수 없습니다 (madang.config.yaml 없음)."));
-    console.error(dim(`탐색 순서: --root > 현재 디렉토리부터 상향 > ${madangHome()}`));
-    console.error(dim("새로 시작하려면 `madang init`(현재 위치) 또는 `madang init --home`을 실행하세요."));
+    console.error(red("profil 프로젝트를 찾을 수 없습니다 (profil.config.yaml 없음)."));
+    console.error(dim(`탐색 순서: --root > 현재 디렉토리부터 상향 > ${appHome()}`));
+    console.error(dim("새로 시작하려면 `profil init`(현재 위치) 또는 `profil init --home`을 실행하세요."));
   }
   return root;
 }
@@ -97,7 +97,7 @@ async function main(): Promise<number> {
 
   switch (command) {
     case "init": {
-      const target = values.home ? madangHome() : (values.root ?? process.cwd());
+      const target = values.home ? appHome() : (values.root ?? process.cwd());
       return (await runInit(target, values.force)) ? 0 : 1;
     }
 

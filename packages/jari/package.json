@@ -1,6 +1,6 @@
 {
-  "name": "@madang/jari",
-  "version": "0.0.1",
+  "name": "@profil/jari",
+  "version": "0.1.0-dev.0",
   "description": "구조화 마크다운 기반 이력서 엔진 — HTML/PDF/DOCX 렌더링",
   "type": "module",
   "main": "./dist/index.js",

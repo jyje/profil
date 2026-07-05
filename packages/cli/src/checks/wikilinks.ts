@@ -9,7 +9,7 @@
 
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import type { ContentIssue, ResumeModel, ResumeEntry } from "@madang/jari";
+import type { ContentIssue, ResumeModel, ResumeEntry } from "@profil/jari";
 
 const SEARCH_ROOTS = ["resume", "notes", "portfolio", "."];
 

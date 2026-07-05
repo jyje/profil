@@ -1,9 +1,9 @@
 // packages/cli/src/checks/positions.ts
 //
-// 포지션 태그 무결성: 콘텐츠의 positions[]/weight 키와 madang.config.yaml의
+// 포지션 태그 무결성: 콘텐츠의 positions[]/weight 키와 profil.config.yaml의
 // resume.positions가 전부 positions/*.md에 정의된 slug를 가리키는지 검사한다.
 
-import type { ContentIssue, ResumeModel } from "@madang/jari";
+import type { ContentIssue, ResumeModel } from "@profil/jari";
 import { CONFIG_FILENAME } from "../config.js";
 
 export interface PositionsCheckResult {
