@@ -96,6 +96,38 @@ npx profil clean [--deep]  # 빌드 산출물 정리 (--deep: node_modules까지
 CI(`.github/workflows/check.yaml`)도 같은 단일 진입점인 `npm run check`를 실행합니다.
 자세한 검사 항목은 `packages/cli/README.md`를 참고하세요.
 
+## 개발 (Development)
+
+Node.js 24 이상이 필요합니다. 작업은 기본 브랜치인 `dev`에서 하고, `main`은
+릴리스 브랜치입니다 — `dev -> main` 병합 시점에 4-OS CI 매트릭스가 돌고, 실제
+npm 발행은 `propose-release` PR을 머지할 때만 일어납니다
+(`packages/cli/README.md` 참고).
+
+```bash
+git clone https://github.com/jyje/profil.git && cd profil   # dev로 클론됨
+npm install        # 워크스페이스 의존성 설치; packages/{jari,cli}는 prepare로 자동 컴파일
+
+npm run check      # 검증 단일 진입점:
+                   #   tsc 빌드 + vitest(전 워크스페이스) + profil check
+npm test           # 테스트만
+npm run profil -- build    # 소스에서 CLI를 실행해 이 리포의 콘텐츠 대상으로 빌드
+```
+
+의도적으로 `dev` 푸시에는 CI가 없습니다 — 커밋 전 `npm run check`가 안전망입니다.
+리포에서 실행하면 데이터 홈으로 `~/.profil-dev`를 사용하므로(버전에 `-dev` 접미사),
+실험이 실제 `~/.profil` 데이터를 건드리지 않습니다.
+
+npm 아티팩트 자체(사용자가 실제로 설치하는 것)를 검증하려면:
+
+```bash
+npm run bundle --workspace=profil        # esbuild -> packages/cli/dist/cli.js
+node packages/cli/dist/cli.js check      # 번들된 CLI 실행
+```
+
+완전 격리 설치 테스트(`npm pack` + `npm install -g <tarball>`)는
+`packages/cli/README.md`에 정리되어 있습니다. 소스코드·주석·커밋 메시지는
+영어 전용입니다.
+
 ## 로드맵
 
 - **M1** — Jari 코어: md 파서, zod 스키마, canonical model, 기본 HTML 렌더러

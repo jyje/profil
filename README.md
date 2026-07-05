@@ -98,6 +98,39 @@ data home.
 CI (`.github/workflows/check.yaml`) runs the same single entry point: `npm run check`.
 See `packages/cli/README.md` for the full list of checks.
 
+## Development
+
+Requires Node.js >= 24. Work happens on the `dev` branch (the default);
+`main` is the release branch — merging `dev -> main` is what triggers the
+4-OS CI matrix, and actual npm releases only happen by merging a
+`propose-release` PR (see `packages/cli/README.md`).
+
+```bash
+git clone https://github.com/jyje/profil.git && cd profil   # lands on dev
+npm install        # workspace deps; packages/{jari,cli} compile via prepare
+
+npm run check      # the one verification entry point:
+                   #   tsc build + vitest (all workspaces) + profil check
+npm test           # tests only
+npm run profil -- build    # run the CLI from source against this repo's content
+```
+
+There is no CI on `dev` pushes by design — `npm run check` before committing
+is the safety net. Running from the repo uses `~/.profil-dev` as the data
+home (the version has a `-dev` suffix), so experiments never touch real
+`~/.profil` data.
+
+To verify the npm artifact itself (what users actually install):
+
+```bash
+npm run bundle --workspace=profil        # esbuild -> packages/cli/dist/cli.js
+node packages/cli/dist/cli.js check      # run the bundled CLI
+```
+
+Full-isolation install testing (`npm pack` + `npm install -g <tarball>`) is
+documented in `packages/cli/README.md`. All source code, comments, and
+commit messages are English-only.
+
 ## Roadmap
 
 - **M1** — Jari core: md parser, zod schema, canonical model, basic HTML renderer
