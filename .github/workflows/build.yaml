@@ -1,19 +1,27 @@
-name: build
+name: ✅ check
 
 on:
   push:
     branches: [main]
   pull_request:
 
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-26.04-arm, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
       - run: npm ci
       # check = package build (tsc) + workspace tests (vitest) + profil check (static checks)
       - run: npm run check
-      # post-M2: upload dist/**/*.pdf, dist/**/*.docx as release artifacts

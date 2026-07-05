@@ -5,7 +5,7 @@
 AI가 관리하는 개인/조직 온라인 프레즌스 —<br/>
 포트폴리오 · 지식기반(Obsidian) · 포지션별 이력서(HTML/PDF/DOCX)를 하나의 콘텐츠 소스에서
 
-[![build](https://github.com/jyje/profil/actions/workflows/build.yaml/badge.svg)](https://github.com/jyje/profil/actions/workflows/build.yaml)
+[![check](https://github.com/jyje/profil/actions/workflows/build.yaml/badge.svg)](https://github.com/jyje/profil/actions/workflows/build.yaml)
 [![GitHub stars](https://img.shields.io/github/stars/jyje/profil?style=social)](https://github.com/jyje/profil/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 

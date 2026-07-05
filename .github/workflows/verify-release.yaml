@@ -2,7 +2,8 @@ name: 🔒 verify-release
 
 # Post-release smoke test: installs the just-published package globally from
 # the real npm registry (not local source) and runs it in a clean directory,
-# proving the published artifact actually works standalone.
+# proving the published artifact actually works standalone on every platform
+# it claims to support.
 #
 # Runs automatically after every successful release run.
 on:
@@ -15,8 +16,19 @@ permissions: {}
 jobs:
   verify:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-26.04-arm, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 5
+    defaults:
+      run:
+        # Windows runners default `run:` steps to PowerShell, which doesn't
+        # understand $(...) / $GITHUB_OUTPUT. GitHub-hosted Windows runners
+        # ship Git Bash, so this keeps every step's syntax uniform across the
+        # whole matrix.
+        shell: bash
     steps:
       - uses: actions/checkout@v4
         with:

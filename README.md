@@ -5,7 +5,7 @@
 AI-managed online presence for individuals and organizations —<br/>
 portfolio · knowledge base (Obsidian) · per-position resumes (HTML/PDF/DOCX), from a single content source
 
-[![build](https://github.com/jyje/profil/actions/workflows/build.yaml/badge.svg)](https://github.com/jyje/profil/actions/workflows/build.yaml)
+[![check](https://github.com/jyje/profil/actions/workflows/build.yaml/badge.svg)](https://github.com/jyje/profil/actions/workflows/build.yaml)
 [![GitHub stars](https://img.shields.io/github/stars/jyje/profil?style=social)](https://github.com/jyje/profil/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
