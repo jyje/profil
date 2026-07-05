@@ -7,10 +7,11 @@ period:
   start: "2021-01"
   end: "2024-11"
 location: "Seoul, KR"
-positions: [mlops, backend]
+positions: [mlops, backend, sre]
 weight:
   mlops: 10
   backend: 6
+  sre: 4
 links: ["[[projects/cluster]]"]
 ---
 쿠버네티스 기반 ML 서빙 플랫폼을 설계하고 운영했습니다.

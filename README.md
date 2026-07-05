@@ -78,6 +78,8 @@ npx profil init --home     # initialize the user data home (~/.profil) instead
 npx profil init --force    # regenerate profil.config.yaml, content/resume, dist from templates
                            # (content/notes and content/portfolio are never overwritten)
 npx profil check           # static checks: config/content schemas, position tags, wikilink integrity
+npx profil build           # assemble + render per-position resumes into dist/ (md, html)
+npx profil build --position mlops --format md   # narrow to one position/format
 npx profil list [section]  # list resume entries (experience|projects|education|positions|skills)
 npx profil add experience --company "ACME" --role "Engineer" --start 2024-01 --positions mlops
 npx profil remove experience/acme.md   # paths are relative to content/resume

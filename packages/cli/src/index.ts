@@ -9,6 +9,7 @@ import { runInit } from "./commands/init.js";
 import { runCheck } from "./commands/check.js";
 import { runClean } from "./commands/clean.js";
 import { runAdd, ADD_TYPES, type AddType } from "./commands/add.js";
+import { runBuild } from "./commands/build.js";
 import { runList } from "./commands/list.js";
 import { runRemove } from "./commands/remove.js";
 import { bold, dim, red } from "./report.js";
@@ -32,6 +33,11 @@ Usage:
       (content/notes and content/portfolio are never overwritten)
 
   profil check              Static checks: config/content schemas, position tag and wikilink integrity
+  profil build [flags]      Assemble and render per-position resumes into dist/
+      [--position <slug>]   one position only (default: all in profil.config.yaml)
+      [--lang ko|en]        one language only (default: languages the content has)
+      [--format md,html]    output formats (default: config resume.formats; pdf/docx land in M2)
+      [--out <dir>]         output directory relative to the project root (default: dist)
   profil list [section]     List resume entries (experience|projects|education|positions|skills)
   profil add <type> [flags]  Add a resume entry (experience|project|education|position)
       common:     [--lang ko|en] [--slug <filename>] [--positions mlops,backend]
@@ -68,6 +74,9 @@ async function main(): Promise<number> {
       root: { type: "string" },
       lang: { type: "string" },
       slug: { type: "string" },
+      position: { type: "string" },
+      format: { type: "string" },
+      out: { type: "string" },
       company: { type: "string" },
       role: { type: "string" },
       title: { type: "string" },
@@ -105,6 +114,11 @@ async function main(): Promise<number> {
     case "check": {
       const root = requireRoot(values.root);
       return root && (await runCheck(root)) ? 0 : 1;
+    }
+
+    case "build": {
+      const root = requireRoot(values.root);
+      return root && (await runBuild(root, values)) ? 0 : 1;
     }
 
     case "list": {

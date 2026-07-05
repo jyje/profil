@@ -1,15 +1,16 @@
 # profil
 
 The internal CLI for the Profil project. Provides full initialization
-(`init`), static checks (`check`), resume management (`add`/`list`/`remove`),
-and cleanup (`clean`). Published to npm as the unscoped `profil` package, so
-`npx profil` works right away.
+(`init`), static checks (`check`), per-position resume builds (`build`),
+resume management (`add`/`list`/`remove`), and cleanup (`clean`). Published
+to npm as the unscoped `profil` package, so `npx profil` works right away.
 
 ```bash
 npx profil init            # scaffold + check in the current directory
 npx profil init --home     # initialize the user data home (~/.profil) instead
 npx profil init --force    # regenerate profil.config.yaml, content/resume, dist from templates
 npx profil check           # static checks (also run in CI)
+npx profil build           # assemble + render per-position resumes into dist/
 npx profil list [section]  # list resume entries (experience|projects|education|positions|skills)
 npx profil add experience --company "ACME" --role "Engineer" --start 2024-01 \
     --end present --positions mlops,backend
@@ -52,6 +53,26 @@ deleting, so a broken wikilink is reported immediately.
    body resolve to a file under `content/`
 
 All errors are collected and reported together; exits 1 if there are any.
+
+## What `build` produces
+
+`profil build` assembles one resume view per **position × language** and
+writes `dist/{name}-{position}-{lang}.{md,html}` (the name is slugified from
+`basics.md`). Assembly rules (`@profil/jari`'s `assembleResume`):
+
+- experience/projects: only entries tagged with the position's slug, sorted
+  by the position's `sort_by` — `weight` (per-position `weight.<slug>`
+  descending, recency as tie-break) or `period` (ongoing first, then newest)
+- education: untagged, included for every position
+- skills: untagged groups are common; tagged groups appear only on their
+  positions
+- HTML styling comes from `design/tokens.yaml` (missing file = defaults),
+  self-contained with inline CSS and print-ready (A4 margins)
+
+Flags: `--position <slug>`, `--lang <ko|en>`, `--format md,html`,
+`--out <dir>`. Defaults come from `profil.config.yaml`'s `resume.positions`
+and `resume.formats` (pdf/docx entries are skipped with a warning until M2).
+`check` runs first — broken content never produces output.
 
 ## `init` safety rules
 

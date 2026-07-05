@@ -9,33 +9,44 @@ Korean for "seat/position").
 ## Status
 
 `src/schema.ts` holds the data model, `src/parser.ts` the single-file parser,
-and `src/loader.ts` the directory loader. Implementation proceeds in this
-order:
+`src/loader.ts` the directory loader, `src/assemble.ts` the per-position view
+assembly, and `src/render/` the Markdown/HTML renderers. Implementation
+proceeds in this order:
 
 ### M1 — Core
 - [x] `loader.ts`'s `loadResumeModel(contentDir)`: scans the whole directory
       and assembles the canonical model (errors are collected instead of
-      thrown — reported by `@profil/cli`'s `check` command)
+      thrown — reported by the CLI's `check` command)
+- [x] `assemble.ts`'s `assembleResume(model, { position, lang })`: filters
+      experience/projects by position tag, sorts by `weight` (per-position
+      priority) or `period` (ongoing first, then newest), narrows skill
+      groups to the position
+- [x] `render/markdown.ts` + `render/html.ts`: assembled view -> a single
+      Markdown document / self-contained HTML page. HTML styling comes from
+      `design.ts`'s `loadDesignTokens` (design/tokens.yaml with full
+      defaults), print-ready per design/Design.md
 - [ ] round-trip test: verify no content is lost through md -> model -> md
-- [ ] `render/html.ts`: canonical model -> a single HTML page (using design
-      token CSS variables)
-- [ ] `positions/*.md` filtering logic: sort experience/projects by tag + weight
 
 ### M2 — Output matrix
 - [ ] `render/pdf.ts`: HTML -> PDF via Playwright (reference the
       `pdf-config.yml` approach from jyje/profile)
 - [ ] a script generating `reference.docx` from `design/tokens.yaml`
 - [ ] `render/docx.ts`: a Pandoc invocation wrapper
-- [ ] CLI: `jari build [--position mlops] [--lang ko] [--format pdf,docx,html]`
 
-## Usage example (target API once M1 is done)
+## Usage example
 
 ```ts
-import { loadResumeModel } from "@profil/jari";
-import { renderHtml } from "@profil/jari/render/html";
+import {
+  loadResumeModel,
+  assembleResume,
+  renderHtml,
+  loadDesignTokens,
+} from "@profil/jari";
 
-const model = await loadResumeModel("./content/resume");
-const html = renderHtml(model, { position: "mlops", lang: "ko" });
+const { model } = await loadResumeModel("./content/resume");
+const { assembled } = assembleResume(model!, { position: "mlops", lang: "ko" });
+const { tokens } = loadDesignTokens(".");
+const html = renderHtml(assembled!, tokens);
 ```
 
 ## Content authoring convention

@@ -6,9 +6,10 @@ period:
   start: "2022-03"
   end: "2023-06"
 role: "Lead"
-positions: [mlops]
+positions: [mlops, sre]
 weight:
   mlops: 9
+  sre: 7
 url: "https://github.com/example/cluster"
 ---
 멀티테넌트 GPU 클러스터 스케줄링 시스템을 설계하고 구축했습니다.

@@ -77,6 +77,8 @@ npx profil init --home     # 사용자 데이터 홈(~/.profil)에 초기화
 npx profil init --force    # profil.config.yaml, content/resume, dist를 템플릿으로 재생성
                            # (content/notes, content/portfolio는 절대 덮어쓰지 않음)
 npx profil check           # 정적 검사: 설정/콘텐츠 스키마, 포지션 태그·위키링크 무결성
+npx profil build           # 포지션별 이력서를 조립해 dist/로 출력 (md, html)
+npx profil build --position mlops --format md   # 포지션/포맷 하나만 선택
 npx profil list [섹션]      # 이력 목록 (experience|projects|education|positions|skills)
 npx profil add experience --company "ACME" --role "Engineer" --start 2024-01 --positions mlops
 npx profil remove experience/acme.md   # 경로는 content/resume 기준

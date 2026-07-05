@@ -30,7 +30,7 @@ export const ProfilConfigSchema = z
     }),
     resume: z.object({
       positions: z.array(z.string()).min(1),
-      formats: z.array(z.enum(["html", "pdf", "docx"])).min(1),
+      formats: z.array(z.enum(["md", "html", "pdf", "docx"])).min(1),
     }),
     deploy: z.object({
       target: z.enum(["self-hosted", "github-pages", "vercel", "cloudflare-pages"]),

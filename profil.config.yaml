@@ -18,8 +18,8 @@ site:
       enabled: true
 
 resume:
-  positions: [mlops, backend]
-  formats: [html, pdf, docx]
+  positions: [mlops, backend, sre]
+  formats: [md, html, pdf, docx]
 
 deploy:
   # self-hosted | github-pages | vercel | cloudflare-pages
