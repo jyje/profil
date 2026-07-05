@@ -5,7 +5,7 @@
 AI가 관리하는 개인/조직 온라인 프레즌스 —<br/>
 포트폴리오 · 지식기반(Obsidian) · 포지션별 이력서(HTML/PDF/DOCX)를 하나의 콘텐츠 소스에서
 
-[![build](https://github.com/jyje/profil/actions/workflows/build.yml/badge.svg)](https://github.com/jyje/profil/actions/workflows/build.yml)
+[![build](https://github.com/jyje/profil/actions/workflows/build.yaml/badge.svg)](https://github.com/jyje/profil/actions/workflows/build.yaml)
 [![GitHub stars](https://img.shields.io/github/stars/jyje/profil?style=social)](https://github.com/jyje/profil/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -91,7 +91,7 @@ npx profil clean [--deep]  # 빌드 산출물 정리 (--deep: node_modules까지
 재정의할 수 있습니다. 모든 명령의 프로젝트 루트 해석 순서는 `--root <dir>` 플래그 →
 현재 디렉토리부터 상향 탐색 → 데이터 홈 폴백입니다.
 
-CI(`.github/workflows/build.yml`)도 같은 단일 진입점인 `npm run check`를 실행합니다.
+CI(`.github/workflows/build.yaml`)도 같은 단일 진입점인 `npm run check`를 실행합니다.
 자세한 검사 항목은 `packages/cli/README.md`를 참고하세요.
 
 ## 로드맵

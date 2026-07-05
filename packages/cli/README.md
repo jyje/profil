@@ -96,18 +96,18 @@ npm uninstall -g profil
 
 Three workflows carry out the release:
 
-1. **`.github/workflows/propose-release.yml`** (`workflow_dispatch`, run
+1. **`.github/workflows/propose-release.yaml`** (`workflow_dispatch`, run
    manually by a maintainer) — computes the next version (from the latest
    `v*` tag, or an explicit `version`/`bump` input), regenerates
    `CHANGELOG.md` with git-cliff, bumps every workspace `package.json`, and
    opens a PR from a **fresh `release/vX.Y.Z` branch** (one per version, not
    reused) into `main`.
-2. **`.github/workflows/release.yml`** — triggers when
+2. **`.github/workflows/release.yaml`** — triggers when
    `packages/cli/package.json`'s version changes on `main` (i.e. once the
    proposal PR above is merged). Tags `vX.Y.Z`, cuts a GitHub Release from the
    matching `CHANGELOG.md` section, and runs
    `npm publish --access public --provenance`.
-3. **`.github/workflows/verify-release.yml`** — after a successful release,
+3. **`.github/workflows/verify-release.yaml`** — after a successful release,
    installs the just-published version globally in a clean environment and
    runs `profil init`/`check` as a smoke test.
 
@@ -117,12 +117,12 @@ prompt that a normal token would hit in CI. To (re)issue one:
 `npmjs.com/settings/<account>/tokens` → **Generate New Token → Classic Token
 → Automation**, then `gh secret set NPM_TOKEN --repo jyje/profil`.
 
-To cut a release: run `propose-release.yml` from the Actions tab, review the
+To cut a release: run `propose-release.yaml` from the Actions tab, review the
 generated PR, and merge it — the rest happens automatically.
 
 ## Dev channel (preview builds)
 
-**`.github/workflows/publish-dev.yml`** (`workflow_dispatch`) publishes the
+**`.github/workflows/publish-dev.yaml`** (`workflow_dispatch`) publishes the
 current state of `main` to npm under the `dev` dist-tag, so it can be tested
 before a real release:
 

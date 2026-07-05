@@ -5,7 +5,7 @@
 AI-managed online presence for individuals and organizations —<br/>
 portfolio · knowledge base (Obsidian) · per-position resumes (HTML/PDF/DOCX), from a single content source
 
-[![build](https://github.com/jyje/profil/actions/workflows/build.yml/badge.svg)](https://github.com/jyje/profil/actions/workflows/build.yml)
+[![build](https://github.com/jyje/profil/actions/workflows/build.yaml/badge.svg)](https://github.com/jyje/profil/actions/workflows/build.yaml)
 [![GitHub stars](https://img.shields.io/github/stars/jyje/profil?style=social)](https://github.com/jyje/profil/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -93,7 +93,7 @@ development when the version has a prerelease tag (e.g. `0.1.0-dev.0`), when
 root as: `--root <dir>` flag → walk up from the current directory → fall back to the
 data home.
 
-CI (`.github/workflows/build.yml`) runs the same single entry point: `npm run check`.
+CI (`.github/workflows/build.yaml`) runs the same single entry point: `npm run check`.
 See `packages/cli/README.md` for the full list of checks.
 
 ## Roadmap

@@ -2,7 +2,7 @@ name: 🧪 publish-dev
 
 # Publishes a preview build of the current main to npm under the `dev`
 # dist-tag, so it can be tested via `npm install -g profil@dev` without
-# affecting `latest` (the real releases produced by release.yml).
+# affecting `latest` (the real releases produced by release.yaml).
 #
 # The published version always carries a "-dev.<run>" prerelease suffix.
 # Nothing is committed or tagged in git — the version bump here is local to

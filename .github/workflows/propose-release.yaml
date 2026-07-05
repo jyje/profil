@@ -2,7 +2,7 @@ name: 📋 propose-release
 
 # Opens a release-proposal PR for the current state of main. The changelog
 # (git-cliff) and version calculation are deterministic; nothing is published
-# here — merging this PR lands the version bump on main, which release.yml
+# here — merging this PR lands the version bump on main, which release.yaml
 # picks up to tag and publish.
 #
 # Trigger is workflow_dispatch only: maintainer-initiated, never runs on
