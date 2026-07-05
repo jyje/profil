@@ -8,10 +8,12 @@
   ],
   "scripts": {
     "dev": "echo 'TODO(M4): packages/site 개발 서버 연결'",
-    "build": "npm run build:design && npm run build:jari",
+    "build": "npm run build:design && npm run build:packages",
     "build:design": "echo 'TODO(M2): tokens.yaml -> CSS vars + reference.docx'",
-    "build:jari": "npm run build --workspace=@madang/jari",
-    "test": "npm run test --workspace=@madang/jari"
+    "build:packages": "npm run build --workspace=@madang/cli",
+    "test": "npm run test --workspaces --if-present",
+    "madang": "node packages/cli/dist/index.js",
+    "check": "npm run build:packages && npm run test --workspaces --if-present && node packages/cli/dist/index.js check"
   },
   "devDependencies": {
     "typescript": "^5.5.0"

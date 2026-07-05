@@ -1,17 +1,20 @@
 {
-  "name": "@madang/jari",
+  "name": "@madang/cli",
   "version": "0.0.1",
-  "description": "구조화 마크다운 기반 이력서 엔진 — HTML/PDF/DOCX 렌더링",
+  "description": "Madang 내부 CLI — 완전 초기화(init), 정적 검사(check), 산출물 정리(clean)",
   "type": "module",
+  "bin": {
+    "madang": "./dist/index.js"
+  },
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "scripts": {
     "test": "vitest run",
     "build": "tsc -b",
     "prepare": "npm run build"
   },
   "dependencies": {
-    "gray-matter": "^4.0.3",
+    "@madang/jari": "0.0.1",
+    "yaml": "^2.4.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {

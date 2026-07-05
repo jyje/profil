@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-      - run: npm test
-      - run: npm run build
+      - run: npm ci
+      # check = 패키지 빌드(tsc) + 워크스페이스 테스트(vitest) + madang check(정적 검사)
+      - run: npm run check
       # M2 이후: dist/**/*.pdf, dist/**/*.docx 를 릴리스 아티팩트로 업로드

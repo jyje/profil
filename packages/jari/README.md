@@ -6,11 +6,12 @@
 
 ## 상태
 
-현재는 **스캐폴드 단계**입니다. `src/schema.ts`에 데이터 모델이, `src/parser.ts`에 파서
-스텁이 있습니다. 아래 순서로 구현을 진행하세요 (Claude Code에게 그대로 지시해도 됩니다):
+`src/schema.ts`에 데이터 모델이, `src/parser.ts`에 단일 파일 파서가, `src/loader.ts`에
+디렉토리 로더가 있습니다. 아래 순서로 구현을 진행하세요:
 
 ### M1 — 코어
-- [ ] `parser.ts`의 `loadResumeModel(contentDir)` 구현: 디렉토리 전체 스캔 → canonical model 조립
+- [x] `loader.ts`의 `loadResumeModel(contentDir)` 구현: 디렉토리 전체 스캔 → canonical model 조립
+      (오류는 throw 대신 전부 수집 — `@madang/cli`의 `check` 명령이 보고)
 - [ ] round-trip 테스트: md → model → md 재생성 시 내용 손실 없음을 검증
 - [ ] `render/html.ts`: canonical model → 단일 HTML 페이지 (디자인 토큰 CSS 변수 사용)
 - [ ] `positions/*.md` 필터링 로직: 태그+weight로 경력/프로젝트 정렬

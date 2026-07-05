@@ -73,6 +73,5 @@ export async function parseContentFile(filePath: string): Promise<ParsedContent>
   return { frontmatter, summary, highlights, raw: content };
 }
 
-// TODO(M1): loadResumeModel(contentDir) — 디렉토리 전체를 읽어
-//   { basics, experience[], projects[], education[], skills, positions[] } 형태의
-//   canonical ResumeModel을 조립한다. links[] 위키링크 존재 여부 검증도 여기서 수행.
+// loadResumeModel(contentDir)은 loader.ts에 구현되어 있다.
+// 위키링크 존재 여부 검증은 @madang/cli의 check 명령이 수행한다.
