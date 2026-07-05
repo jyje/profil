@@ -1,0 +1,53 @@
+name: 🧪 publish-dev
+
+# Publishes a preview build of the current main to npm under the `dev`
+# dist-tag, so it can be tested via `npm install -g profil@dev` without
+# affecting `latest` (the real releases produced by release.yml).
+#
+# The published version always carries a "-dev.<run>" prerelease suffix.
+# Nothing is committed or tagged in git — the version bump here is local to
+# the runner and thrown away after publish. Because the version has a
+# prerelease tag, isDevBuild() (packages/cli/src/paths.ts) detects it
+# automatically, so installing this build uses ~/.profil-dev rather than the
+# real ~/.profil data home.
+#
+# Trigger is workflow_dispatch only: an explicit "give me a preview build"
+# action, not something that fires on every push.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # mint a GitHub Actions OIDC token for npm provenance
+
+jobs:
+  publish-dev:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+
+      - run: npm ci
+      # check = package build (tsc) + workspace tests (vitest) + profil check
+      - run: npm run check
+
+      - name: Compute the preview version
+        id: ver
+        run: |
+          base="$(node -p "require('./packages/cli/package.json').version.split('-')[0]")"
+          new="${base}-dev.${{ github.run_number }}"
+          echo "version=$new" >> "$GITHUB_OUTPUT"
+          echo "::notice::publishing preview v$new under the dev dist-tag"
+
+      - name: Set the preview version (not committed)
+        run: npm version "${{ steps.ver.outputs.version }}" --workspaces --include-workspace-root --no-git-tag-version
+
+      # prepublishOnly bundles the package with esbuild automatically.
+      - run: npm publish --access public --tag dev --provenance
+        working-directory: packages/cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

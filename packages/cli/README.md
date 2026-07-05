@@ -119,3 +119,22 @@ prompt that a normal token would hit in CI. To (re)issue one:
 
 To cut a release: run `propose-release.yml` from the Actions tab, review the
 generated PR, and merge it — the rest happens automatically.
+
+## Dev channel (preview builds)
+
+**`.github/workflows/publish-dev.yml`** (`workflow_dispatch`) publishes the
+current state of `main` to npm under the `dev` dist-tag, so it can be tested
+before a real release:
+
+```bash
+npm install -g profil@dev
+```
+
+The published version is always `<base>-dev.<run number>` (e.g.
+`0.1.0-dev.42`) — computed on the runner and never committed to git; no tag
+or GitHub Release is created for these. Because the version carries a
+prerelease tag, `isDevBuild()` (`src/paths.ts`) detects it automatically, so
+installing a preview build uses `~/.profil-dev` instead of the real
+`~/.profil` — it can never clobber real user data. `latest` (plain
+`npm install -g profil`) is untouched and always points at the most recent
+real release.
