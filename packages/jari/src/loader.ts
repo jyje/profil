@@ -10,7 +10,7 @@
 import matter from "gray-matter";
 import { readFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, sep } from "node:path";
 import type { z } from "zod";
 import {
   BasicsSchema,
@@ -65,7 +65,9 @@ async function parseEntry<T>(
   contentDir: string,
   errors: ContentIssue[],
 ): Promise<ResumeEntry<T> | null> {
-  const rel = relative(contentDir, filePath);
+  // sourcePath is a logical contentDir-relative path shown to users and used
+  // in messages — keep it forward-slashed on every OS
+  const rel = relative(contentDir, filePath).split(sep).join("/");
 
   let raw: string;
   try {
