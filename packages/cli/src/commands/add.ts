@@ -159,10 +159,13 @@ export function buildEntry(type: AddType, opts: AddOptions): BuiltEntry {
     return { relPath: "", content: "", errors };
   }
 
-  // Serialize the validated value (with defaults applied) back to frontmatter
+  // Serialize the validated value (with defaults applied) back to frontmatter.
+  // relPath is a logical content/resume-relative path, so it always uses
+  // forward slashes regardless of OS (path.join would emit backslashes on
+  // Windows); only filesystem access joins it onto an OS path.
   const yaml = stringifyYaml(result.data ?? fm);
   const content = `---\n${yaml}---\n${placeholderBody(type, lang)}\n`;
-  return { relPath: join(DIR_BY_TYPE[type], `${slug}.md`), content, errors: [] };
+  return { relPath: `${DIR_BY_TYPE[type]}/${slug}.md`, content, errors: [] };
 }
 
 export async function runAdd(
