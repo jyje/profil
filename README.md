@@ -1,78 +1,96 @@
-# Madang (마당)
+<div align="center">
 
-> AI가 관리하는 개인/조직 온라인 프레즌스: 포트폴리오 · 지식기반(Obsidian 연동) · 포지션별 이력서(PDF/Word/HTML)를 하나의 콘텐츠 소스에서.
+# jyje/madang
 
-마당은 한옥에서 손님을 맞이하고 물건을 펼쳐 보이는 열린 공간입니다. 이 프로젝트는 흩어져 있던
-포트폴리오, 지식기반 블로그(Quartz류), 이력서 빌더를 **하나의 마당**으로 모읍니다.
+AI-managed online presence for individuals and organizations —<br/>
+portfolio · knowledge base (Obsidian) · per-position resumes (HTML/PDF/DOCX), from a single content source
 
-- **단일 소스**: `content/` 아래 구조화된 마크다운이 진실의 원천(single source of truth)
-- **다중 출력**: 웹 페이지, PDF, DOCX가 같은 데이터에서 파생
-- **포지션 변형**: 지원하는 포지션마다 다른 이력서를 자동 조립
-- **AI 하네스**: 콘텐츠 추가/수정, 빌드 검증, 링크 무결성 검사를 에이전트가 보조
+[![build](https://github.com/jyje/madang/actions/workflows/build.yml/badge.svg)](https://github.com/jyje/madang/actions/workflows/build.yml)
+[![GitHub stars](https://img.shields.io/github/stars/jyje/madang?style=social)](https://github.com/jyje/madang/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 모노레포 구조
+[English](README.md) / [한국어](README-ko.md)
+
+</div>
+
+If this project helps you build your own madang, consider leaving a ⭐!
+
+## Overview
+
+*Madang* (마당) is the open courtyard of a traditional Korean house — the place where
+you welcome guests and lay out what you have to show. This project gathers your
+scattered portfolio, knowledge-base blog (Quartz-style), and resume builder into
+**one madang**.
+
+- **Single source of truth**: structured Markdown under `content/` drives everything
+- **Multi-format output**: web pages, PDF, and DOCX derive from the same data
+- **Position variants**: a different resume is assembled automatically for each position you apply to
+- **AI harness**: an agent assists with content edits, build verification, and link integrity checks
+
+## Monorepo structure
 
 ```
 madang/
-├── AGENTS.md            # AI 에이전트(Claude Code 등) 작업 규약
+├── AGENTS.md            # Working conventions for AI agents (Claude Code, etc.)
 ├── design/
-│   ├── tokens.yaml       # 색상/타이포/간격 — 단일 디자인 진실
-│   └── Design.md         # 디자인 시스템 문서 (사람 + AI 겸용)
+│   ├── tokens.yaml       # Colors/typography/spacing — single design truth
+│   └── Design.md         # Design system docs (for humans + AI)
 ├── content/
-│   ├── resume/           # 이력서 데이터 (구조화 마크다운)
+│   ├── resume/           # Resume data (structured Markdown)
 │   │   ├── basics.md
 │   │   ├── experience/*.md
 │   │   ├── projects/*.md
 │   │   ├── education/*.md
 │   │   ├── skills.md
-│   │   └── positions/*.md   # 포지션별 뷰 정의 (필터/정렬 규칙)
-│   ├── portfolio/*.md    # 포트폴리오 항목 (jyje/profile 마이그레이션 대상)
-│   └── notes/            # Obsidian vault (지식기반 탭, jyje/docs 마이그레이션 대상)
+│   │   └── positions/*.md   # Per-position view definitions (filter/sort rules)
+│   ├── portfolio/*.md    # Portfolio entries
+│   └── notes/            # Obsidian vault (knowledge-base tab)
 ├── packages/
-│   ├── jari/              # 이력서 엔진: parse → model → render(html/pdf/docx)
-│   ├── cli/               # 내부 CLI: madang init / check / clean
-│   └── site/               # 웹 템플릿 (포트폴리오/지식기반/이력서 탭)
-├── madang.config.yaml     # 언어, 탭, 배포 대상 설정
-└── dist/                  # 빌드 산출물: {name}-{position}-{lang}.{pdf,docx}
+│   ├── jari/              # Resume engine: parse → model → render(html/pdf/docx)
+│   ├── cli/               # Internal CLI: madang init / check / clean
+│   └── site/               # Web template (portfolio/notes/resume tabs)
+├── madang.config.yaml     # Languages, tabs, deploy target
+└── dist/                  # Build outputs: {name}-{position}-{lang}.{pdf,docx}
 ```
 
-## 왜 마크다운인가
+## Why structured Markdown
 
-이력서 데이터를 YAML 대신 **구조화 마크다운**으로 씁니다. frontmatter가 구조(회사명, 기간, 태그)를,
-본문이 리치 텍스트(요약, 성과 불릿)를 담당해서 YAML과 1:1로 무손실 매핑됩니다. 동시에 Obsidian에서
-properties 패널로 그대로 열어 편집할 수 있고, `[[위키링크]]`로 포트폴리오·지식기반과 자연스럽게
-연결됩니다.
+Resume data is written as **structured Markdown** instead of YAML. Frontmatter holds
+the structure (company, period, tags) while the body holds rich text (summary,
+highlight bullets), so it maps 1:1 to YAML without loss. At the same time you can
+open the files directly in Obsidian's properties panel, and `[[wikilinks]]` connect
+them naturally to your portfolio and knowledge base.
 
-## 빠른 시작
+## Quick start
 
 ```bash
-git clone <this-repo> madang && cd madang
-npm install         # 설치 시 packages/{jari,cli}가 자동 빌드됨 (prepare)
-npm run check       # 정적 테스트: tsc 빌드 + vitest + madang check
-npm run dev        # 로컬 미리보기 (M4)
-npm run build       # HTML + PDF + DOCX 전체 매트릭스 빌드 (M2)
+git clone https://github.com/jyje/madang.git && cd madang
+npm install         # packages/{jari,cli} build automatically on install (prepare)
+npm run check       # static tests: tsc build + vitest + madang check
+npm run dev        # local preview (M4)
+npm run build       # full HTML + PDF + DOCX matrix build (M2)
 ```
 
-## 내부 CLI (`madang`)
+## Internal CLI (`madang`)
 
 ```bash
-npx madang init            # 빈 디렉토리에 프로젝트 완전 초기화 (템플릿 스캐폴드 + 검사)
-npx madang init --force    # madang.config.yaml, content/resume, dist를 템플릿으로 재생성
-                           # (content/notes, content/portfolio는 절대 덮어쓰지 않음)
-npx madang check           # 정적 검사: 설정/콘텐츠 스키마, 포지션 태그·위키링크 무결성
-npx madang clean [--deep]  # 빌드 산출물 정리 (--deep: node_modules까지)
+npx madang init            # fully initialize a project in an empty directory (scaffold + check)
+npx madang init --force    # regenerate madang.config.yaml, content/resume, dist from templates
+                           # (content/notes and content/portfolio are never overwritten)
+npx madang check           # static checks: config/content schemas, position tags, wikilink integrity
+npx madang clean [--deep]  # remove build outputs (--deep: node_modules too)
 ```
 
-CI(`.github/workflows/build.yml`)도 `npm run check` 하나를 실행합니다.
-자세한 검사 항목은 `packages/cli/README.md` 참고.
+CI (`.github/workflows/build.yml`) runs the same single entry point: `npm run check`.
+See `packages/cli/README.md` for the full list of checks.
 
-## 로드맵
+## Roadmap
 
-- **M1** — Jari 코어: md 파서, zod 스키마, canonical model, 기본 HTML 렌더러
-- **M2** — 출력 매트릭스: PDF(Playwright), DOCX(Pandoc), CLI, CI 아티팩트
-- **M3** — 포지션 변형 + AI 하네스: positions 뷰, 링크 무결성 검사, 에이전트 워크플로우
-- **M4** — Madang 사이트 통합: 포트폴리오/지식기반 탭, 셀프호스팅/클라우드 배포
+- **M1** — Jari core: md parser, zod schema, canonical model, basic HTML renderer
+- **M2** — Output matrix: PDF (Playwright), DOCX (Pandoc), build CLI, CI artifacts
+- **M3** — Position variants + AI harness: position views, link integrity, agent workflow
+- **M4** — Madang site integration: portfolio/notes tabs, self-hosted/cloud deployment
 
-## 라이선스
+## License
 
-MIT (design/tokens.yaml 및 본인 콘텐츠는 별도 라이선스 가능)
+MIT (design tokens and your own content may be licensed separately)
