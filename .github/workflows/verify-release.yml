@@ -1,0 +1,43 @@
+name: 🔒 verify-release
+
+# Post-release smoke test: installs the just-published package globally from
+# the real npm registry (not local source) and runs it in a clean directory,
+# proving the published artifact actually works standalone.
+#
+# Runs automatically after every successful release run.
+on:
+  workflow_run:
+    workflows: ["🚀 release"]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  verify:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Resolve version
+        id: ver
+        run: echo "version=$(node -p "require('./packages/cli/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install the published package globally
+        run: npm install -g profil@${{ steps.ver.outputs.version }}
+
+      - name: Smoke test in a clean directory
+        run: |
+          set -euo pipefail
+          profil --version
+          work="$(mktemp -d)"
+          cd "$work"
+          profil init
+          profil check

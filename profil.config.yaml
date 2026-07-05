@@ -1,0 +1,26 @@
+# profil.config.yaml
+
+site:
+  name: "Profil"
+  languages: [ko, en]
+  default_language: ko
+  tabs:
+    - id: portfolio
+      label: { ko: "포트폴리오", en: "Portfolio" }
+      enabled: true
+    - id: notes
+      label: { ko: "지식기반", en: "Notes" }
+      enabled: true
+      # until M4: quartz-embed | native
+      renderer: quartz-embed
+    - id: resume
+      label: { ko: "이력서", en: "Resume" }
+      enabled: true
+
+resume:
+  positions: [mlops, backend]
+  formats: [html, pdf, docx]
+
+deploy:
+  # self-hosted | github-pages | vercel | cloudflare-pages
+  target: self-hosted

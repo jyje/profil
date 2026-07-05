@@ -1,0 +1,122 @@
+name: 📋 propose-release
+
+# Opens a release-proposal PR for the current state of main. The changelog
+# (git-cliff) and version calculation are deterministic; nothing is published
+# here — merging this PR lands the version bump on main, which release.yml
+# picks up to tag and publish.
+#
+# Trigger is workflow_dispatch only: maintainer-initiated, never runs on
+# untrusted PR events.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Exact version to release, e.g. 0.0.2 (overrides bump)"
+        type: string
+        default: ""
+      bump:
+        description: "Version bump level (ignored if 'version' is set)"
+        type: choice
+        default: patch
+        options: [patch, minor, major]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: propose-release
+  cancel-in-progress: true
+
+env:
+  GIT_CLIFF_VERSION: "2.13.1"
+
+jobs:
+  propose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0 # full tag history for git-cliff and version resolution
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+      # check = package build (tsc) + workspace tests (vitest) + profil check
+      # (static content checks). Don't propose a release from a broken state.
+      - run: npm run check
+
+      - name: Install git-cliff
+        run: |
+          curl -sSL "https://github.com/orhun/git-cliff/releases/download/v${GIT_CLIFF_VERSION}/git-cliff-${GIT_CLIFF_VERSION}-$(uname -m)-unknown-linux-gnu.tar.gz" \
+            | tar -xz --strip-components=1 -C /usr/local/bin "git-cliff-${GIT_CLIFF_VERSION}/git-cliff"
+          git-cliff --version
+
+      - name: Resolve next version
+        id: ver
+        run: |
+          latest_tag="$(git tag -l 'v*' --sort=-v:refname | head -1)"
+          base="${latest_tag#v}"
+          [ -z "$base" ] && base="0.0.0"
+
+          version_in="${{ inputs.version }}"
+          if [ -n "$version_in" ]; then
+            new="${version_in#v}"
+          else
+            IFS='.' read -r major minor patch <<< "$base"
+            case "${{ inputs.bump }}" in
+              major) new="$((major+1)).0.0" ;;
+              minor) new="$major.$((minor+1)).0" ;;
+              *)     new="$major.$minor.$((patch+1))" ;;
+            esac
+          fi
+
+          if git rev-parse -q --verify "refs/tags/v$new" >/dev/null; then
+            echo "::error::tag v$new already exists"
+            exit 1
+          fi
+
+          echo "base=$base" >> "$GITHUB_OUTPUT"
+          echo "new=$new"   >> "$GITHUB_OUTPUT"
+          echo "::notice::proposing v$base -> v$new"
+
+      - name: Bump workspace versions
+        run: npm version "${{ steps.ver.outputs.new }}" --workspaces --include-workspace-root --no-git-tag-version
+
+      - name: Update CHANGELOG.md
+        run: git-cliff --tag "v${{ steps.ver.outputs.new }}" -o CHANGELOG.md
+
+      - name: Extract this release's changelog section (for the PR body)
+        run: |
+          awk -v marker="[${{ steps.ver.outputs.new }}]" '
+            /^## \[/ {
+              if (found) exit
+              if (index($0, marker) > 0) { found=1; print; next }
+              next
+            }
+            found { print }
+          ' CHANGELOG.md > /tmp/release-notes.md
+          {
+            echo "Version: \`v${{ steps.ver.outputs.base }}\` -> \`v${{ steps.ver.outputs.new }}\`"
+            echo
+            cat /tmp/release-notes.md
+          } > /tmp/pr-body.md
+
+      - name: Create or update the release PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          base: main
+          branch: release/v${{ steps.ver.outputs.new }}
+          add-paths: |
+            package.json
+            package-lock.json
+            packages/*/package.json
+            CHANGELOG.md
+          commit-message: "🔧 chore(release): propose v${{ steps.ver.outputs.new }}"
+          title: "🚀 release: merge v${{ steps.ver.outputs.new }} release proposal"
+          body-path: /tmp/pr-body.md
+          labels: release
+          delete-branch: true

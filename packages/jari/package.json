@@ -1,0 +1,22 @@
+{
+  "name": "@profil/jari",
+  "version": "0.1.0-dev.0",
+  "description": "Structured-Markdown-based resume engine — renders HTML/PDF/DOCX",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "vitest run",
+    "build": "tsc -b",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  }
+}

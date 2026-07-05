@@ -1,0 +1,11 @@
+{
+  "name": "@profil/site",
+  "version": "0.1.0-dev.0",
+  "private": true,
+  "description": "Web template hosting the portfolio / knowledge base / resume tabs (implementation starts in M4)",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'M4: to be initialized as an Astro (or Jekyll) project'"
+  },
+  "dependencies": {}
+}

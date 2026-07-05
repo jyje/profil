@@ -1,0 +1,76 @@
+name: 🚀 release
+
+# Release model: packages/cli/package.json's version is the source of truth.
+# When a commit on main changes it to a version with no tag yet (normally the
+# merge of a propose-release PR), CI tags it, writes release notes from
+# CHANGELOG.md, and publishes to npm. CI never pushes to main — the tag,
+# release, and npm publish are the only outputs.
+on:
+  push:
+    branches: [main]
+    paths: ["packages/cli/package.json"]
+
+permissions:
+  contents: write # create the tag + GitHub Release
+  id-token: write # mint a GitHub Actions OIDC token for npm provenance
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history + tags for the tag-exists guard
+
+      - name: Resolve version
+        id: ver
+        run: |
+          VER="$(node -p "require('./packages/cli/package.json').version")"
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+          if git rev-parse -q --verify "refs/tags/v$VER" >/dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::v$VER already released — nothing to do."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Extract changelog section for this version
+        if: steps.ver.outputs.exists == 'false'
+        run: |
+          awk -v marker="[${{ steps.ver.outputs.version }}]" '
+            /^## \[/ {
+              if (found) exit
+              if (index($0, marker) > 0) { found=1; next }
+              next
+            }
+            found { print }
+          ' CHANGELOG.md > /tmp/release-notes.md
+
+      - uses: actions/setup-node@v4
+        if: steps.ver.outputs.exists == 'false'
+        with:
+          node-version: 20
+          registry-url: "https://registry.npmjs.org"
+
+      - run: npm ci
+        if: steps.ver.outputs.exists == 'false'
+      # check = package build (tsc) + workspace tests (vitest) + profil check
+      - run: npm run check
+        if: steps.ver.outputs.exists == 'false'
+
+      - name: Create tag + GitHub Release
+        if: steps.ver.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.ver.outputs.version }}
+          name: profil v${{ steps.ver.outputs.version }}
+          body_path: /tmp/release-notes.md
+
+      # prepublishOnly bundles the package with esbuild automatically.
+      # --provenance attests (via GitHub Actions OIDC) that this publish came
+      # from this workflow run — shown as a Provenance badge on the npm page.
+      - run: npm publish --access public --provenance
+        if: steps.ver.outputs.exists == 'false'
+        working-directory: packages/cli
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
