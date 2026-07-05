@@ -1,26 +1,40 @@
 {
-  "name": "@profil/cli",
+  "name": "profil",
   "version": "0.1.0-dev.0",
-  "description": "Profil 내부 CLI — 완전 초기화(init), 정적 검사(check), 산출물 정리(clean)",
+  "description": "AI가 관리하는 포트폴리오 · 지식기반 · 포지션별 이력서 사이트 — 내부 CLI (init/check/add/list/remove/clean)",
+  "keywords": ["resume", "cv", "portfolio", "obsidian", "markdown", "cli"],
+  "license": "MIT",
+  "homepage": "https://github.com/jyje/profil",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jyje/profil.git",
+    "directory": "packages/cli"
+  },
   "type": "module",
   "bin": {
-    "profil": "./dist/index.js"
+    "profil": "./dist/cli.js"
   },
-  "main": "./dist/index.js",
+  "main": "./dist/cli.js",
+  "files": ["dist/cli.js", "templates"],
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "test": "vitest run",
     "build": "tsc -b",
-    "prepare": "npm run build"
+    "bundle": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node18 --external:yaml --banner:js=\"import{createRequire}from'node:module';const require=createRequire(import.meta.url);\" --outfile=dist/cli.js",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run bundle"
   },
   "dependencies": {
-    "@profil/jari": "0.1.0-dev.0",
-    "yaml": "^2.4.5",
-    "zod": "^3.23.8"
+    "yaml": "^2.4.5"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
+    "esbuild": "^0.23.0",
     "gray-matter": "^4.0.3",
     "typescript": "^5.5.0",
-    "vitest": "^2.0.0"
+    "vitest": "^2.0.0",
+    "zod": "^3.23.8"
   }
 }

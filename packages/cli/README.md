@@ -1,7 +1,8 @@
-# @profil/cli
+# profil
 
 Profil 프로젝트 내부 CLI. 완전 초기화(`init`), 정적 검사(`check`), 이력 관리
-(`add`/`list`/`remove`), 산출물 정리(`clean`)를 제공합니다.
+(`add`/`list`/`remove`), 산출물 정리(`clean`)를 제공합니다. npm에는 스코프 없는
+`profil` 패키지로 배포되어 `npx profil`이 바로 동작합니다.
 
 ```bash
 npx profil init            # 현재 디렉토리에 스캐폴드 + 검사
@@ -59,3 +60,28 @@ npx profil clean [--deep]  # 빌드 산출물 정리 (--deep: node_modules까지
 
 `templates/`가 스캐폴드의 원본입니다. 샘플 콘텐츠를 바꾸려면 여기를 수정하세요
 (리포 루트의 `content/`는 사용자 데이터라 init 템플릿이 아닙니다).
+
+## 패키징 (bundle)
+
+배포되는 실행 파일은 `dist/cli.js` 하나입니다 — esbuild로 `@profil/jari`,
+`zod`, `gray-matter` 등을 전부 인라인 번들링해서, npm에 `@profil/jari`를 별도
+발행하지 않고도 `profil` 하나만으로 설치·실행이 됩니다. 유일한 외부 런타임
+의존성은 `yaml`(CJS 상호운용 문제로 `--external:yaml` 처리, `dependencies`에 유지)
+뿐입니다.
+
+```bash
+npm run bundle --workspace=profil   # dist/cli.js 생성 (esbuild)
+```
+
+`npm publish`는 `prepublishOnly` 훅으로 이 스크립트를 자동 실행하므로 수동으로
+번들링할 필요는 없습니다. `files` 필드가 `dist/cli.js`와 `templates/`만 포함하도록
+제한하므로 `src/`, 테스트, 모노레포 워크스페이스 참조는 발행물에 섞이지 않습니다.
+
+검증 방법(모노레포 밖 완전 격리 테스트):
+
+```bash
+cd packages/cli && npm pack
+npm install -g ./profil-<version>.tgz
+profil --version && profil init   # 임시 디렉토리에서
+npm uninstall -g profil
+```
