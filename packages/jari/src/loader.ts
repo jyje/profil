@@ -11,7 +11,6 @@ import matter from "gray-matter";
 import { readFile, readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, relative, sep } from "node:path";
-import type { z } from "zod";
 import {
   BasicsSchema,
   ExperienceSchema,
@@ -58,9 +57,19 @@ export interface LoadResumeResult {
   errors: ContentIssue[];
 }
 
+/**
+ * The slice of a zod schema this loader needs, with T pinned to the parsed
+ * Output type. Structural on purpose: it survives zod major-version changes
+ * to the ZodType generics (v3's ZodTypeDef parameter is gone in v4).
+ */
+interface SchemaLike<T> {
+  safeParse(data: unknown):
+    | { success: true; data: T }
+    | { success: false; error: { issues: { path: PropertyKey[]; message: string }[] } };
+}
+
 async function parseEntry<T>(
-  // Pinned to the Output type (not the pre-defaults Input type) so T infers correctly
-  schema: z.ZodType<T, z.ZodTypeDef, unknown>,
+  schema: SchemaLike<T>,
   filePath: string,
   contentDir: string,
   errors: ContentIssue[],
@@ -110,7 +119,7 @@ async function listMarkdown(dir: string): Promise<string[]> {
 }
 
 async function loadDir<T>(
-  schema: z.ZodType<T, z.ZodTypeDef, unknown>,
+  schema: SchemaLike<T>,
   dir: string,
   contentDir: string,
   errors: ContentIssue[],

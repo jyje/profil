@@ -23,11 +23,11 @@ export const BasicsSchema = BaseFrontmatter.extend({
   type: z.literal("basics"),
   name: z.string(),
   headline: z.string().optional(),
-  email: z.string().email().optional(),
+  email: z.email().optional(),
   phone: z.string().optional(),
   location: z.string().optional(),
   socials: z
-    .array(z.object({ label: z.string(), url: z.string().url() }))
+    .array(z.object({ label: z.string(), url: z.url() }))
     .optional(),
 });
 
@@ -50,7 +50,7 @@ export const ProjectSchema = BaseFrontmatter.extend({
   role: z.string().optional(),
   positions: z.array(z.string()).default([]),
   weight: z.record(z.string(), z.number()).optional(),
-  url: z.string().url().optional(),
+  url: z.url().optional(),
 });
 
 /** content/resume/education/*.md */

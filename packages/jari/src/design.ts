@@ -20,7 +20,7 @@ const DesignTokensSchema = z.object({
       accent: z.string().default("#2f6f4f"),
       border: z.string().default("#e0e0e0"),
     })
-    .default({}),
+    .prefault({}),
   typography: z
     .object({
       font_body: z
@@ -34,14 +34,14 @@ const DesignTokensSchema = z.object({
           body: z.number().default(1.6),
           heading: z.number().default(1.3),
         })
-        .default({}),
+        .prefault({}),
     })
-    .default({}),
+    .prefault({}),
   layout: z
     .object({
       max_width_content: z.string().default("720px"),
     })
-    .default({}),
+    .prefault({}),
   print: z
     .object({
       page_size: z.string().default("A4"),
@@ -52,9 +52,9 @@ const DesignTokensSchema = z.object({
           bottom: z.string().default("8mm"),
           left: z.string().default("8mm"),
         })
-        .default({}),
+        .prefault({}),
     })
-    .default({}),
+    .prefault({}),
 });
 
 export type DesignTokens = z.infer<typeof DesignTokensSchema>;

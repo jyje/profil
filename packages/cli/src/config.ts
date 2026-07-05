@@ -39,7 +39,7 @@ export const ProfilConfigSchema = z
   .superRefine((cfg, ctx) => {
     if (!cfg.site.languages.includes(cfg.site.default_language)) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         path: ["site", "default_language"],
         message: `not one of site.languages: "${cfg.site.default_language}"`,
       });
