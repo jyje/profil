@@ -74,12 +74,21 @@ npm run build       # full HTML + PDF + DOCX matrix build (M2)
 ## Internal CLI (`madang`)
 
 ```bash
-npx madang init            # fully initialize a project in an empty directory (scaffold + check)
+npx madang init            # fully initialize a project in the current directory (scaffold + check)
+npx madang init --home     # initialize the user data home (~/.madang) instead
 npx madang init --force    # regenerate madang.config.yaml, content/resume, dist from templates
                            # (content/notes and content/portfolio are never overwritten)
 npx madang check           # static checks: config/content schemas, position tags, wikilink integrity
+npx madang list [section]  # list resume entries (experience|projects|education|positions|skills)
+npx madang add experience --company "ACME" --role "Engineer" --start 2024-01 --positions mlops
+npx madang remove experience/acme.md   # paths are relative to content/resume
 npx madang clean [--deep]  # remove build outputs (--deep: node_modules too)
 ```
+
+**Data home** — when installed as a local tool, user data lives in `~/.madang/`
+(`$HOME/.madang` on macOS/Linux, `%USERPROFILE%\.madang` on Windows; override with
+`MADANG_HOME`). Every command resolves its project root as: `--root <dir>` flag →
+walk up from the current directory → fall back to `~/.madang`.
 
 CI (`.github/workflows/build.yml`) runs the same single entry point: `npm run check`.
 See `packages/cli/README.md` for the full list of checks.

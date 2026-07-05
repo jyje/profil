@@ -8,7 +8,7 @@
 //     content/notes/(Obsidian vault)와 content/portfolio/는 사용자 데이터일 수 있으므로
 //     없을 때만 생성하고 절대 덮어쓰지 않는다.
 
-import { cp, rm } from "node:fs/promises";
+import { cp, mkdir, rm } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { TEMPLATES_DIR } from "../paths.js";
@@ -25,6 +25,9 @@ const CREATE_ONLY_PATHS = ["content/notes", "content/portfolio"];
 export async function runInit(targetRoot: string, force: boolean): Promise<boolean> {
   console.log(bold(`madang init — ${targetRoot}`));
   console.log();
+
+  // --home 등 아직 없는 디렉토리에도 초기화할 수 있도록
+  await mkdir(targetRoot, { recursive: true });
 
   const existing = MANAGED_PATHS.filter((p) => existsSync(join(targetRoot, p)));
   if (existing.length > 0 && !force) {

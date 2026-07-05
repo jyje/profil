@@ -72,12 +72,21 @@ npm run build       # HTML + PDF + DOCX 전체 매트릭스 빌드 (M2)
 ## 내부 CLI (`madang`)
 
 ```bash
-npx madang init            # 빈 디렉토리에 프로젝트 완전 초기화 (템플릿 스캐폴드 + 검사)
+npx madang init            # 현재 디렉토리에 프로젝트 완전 초기화 (템플릿 스캐폴드 + 검사)
+npx madang init --home     # 사용자 데이터 홈(~/.madang)에 초기화
 npx madang init --force    # madang.config.yaml, content/resume, dist를 템플릿으로 재생성
                            # (content/notes, content/portfolio는 절대 덮어쓰지 않음)
 npx madang check           # 정적 검사: 설정/콘텐츠 스키마, 포지션 태그·위키링크 무결성
+npx madang list [섹션]      # 이력 목록 (experience|projects|education|positions|skills)
+npx madang add experience --company "ACME" --role "Engineer" --start 2024-01 --positions mlops
+npx madang remove experience/acme.md   # 경로는 content/resume 기준
 npx madang clean [--deep]  # 빌드 산출물 정리 (--deep: node_modules까지)
 ```
+
+**데이터 홈** — 로컬 도구로 설치하면 사용자 데이터는 `~/.madang/`에 쌓입니다
+(macOS/Linux는 `$HOME/.madang`, Windows는 `%USERPROFILE%\.madang`, `MADANG_HOME`으로
+재정의 가능). 모든 명령의 프로젝트 루트 해석 순서는 `--root <dir>` 플래그 → 현재
+디렉토리부터 상향 탐색 → `~/.madang` 폴백입니다.
 
 CI(`.github/workflows/build.yml`)도 같은 단일 진입점인 `npm run check`를 실행합니다.
 자세한 검사 항목은 `packages/cli/README.md`를 참고하세요.

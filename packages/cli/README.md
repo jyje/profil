@@ -1,15 +1,33 @@
 # @madang/cli
 
-Madang 프로젝트 내부 CLI. 완전 초기화(`init`), 정적 검사(`check`), 산출물 정리(`clean`)를
-제공합니다.
+Madang 프로젝트 내부 CLI. 완전 초기화(`init`), 정적 검사(`check`), 이력 관리
+(`add`/`list`/`remove`), 산출물 정리(`clean`)를 제공합니다.
 
 ```bash
-# 리포 루트에서 (node_modules/.bin에 madang이 링크됨)
-npx madang init            # 새 디렉토리에 스캐폴드 + 검사
+npx madang init            # 현재 디렉토리에 스캐폴드 + 검사
+npx madang init --home     # 사용자 데이터 홈(~/.madang)에 초기화
 npx madang init --force    # madang.config.yaml, content/resume, dist를 템플릿으로 재생성
 npx madang check           # 정적 검사 (CI에서도 이걸 실행)
+npx madang list [섹션]      # 이력 목록 (experience|projects|education|positions|skills)
+npx madang add experience --company "ACME" --role "Engineer" --start 2024-01 \
+    --end present --positions mlops,backend
+npx madang add project --title "..." [--url ...] / add education / add position
+npx madang remove experience/acme.md   # content/resume 기준 경로만 허용
 npx madang clean [--deep]  # 빌드 산출물 정리 (--deep: node_modules까지)
 ```
+
+## 데이터 홈 (`~/.madang`)
+
+로컬(전역) 설치 시 사용자 데이터는 `~/.madang/`에 쌓입니다 — macOS/Linux는
+`$HOME/.madang`, Windows는 `%USERPROFILE%\.madang`. `MADANG_HOME` 환경변수로 위치를
+재정의할 수 있습니다.
+
+모든 명령의 프로젝트 루트 해석 순서: `--root <dir>` 플래그 → 현재 디렉토리부터 상향
+탐색(`madang.config.yaml` 기준) → `~/.madang` 폴백. 즉 리포 안에서는 리포를, 밖에서는
+데이터 홈을 자동으로 대상 삼습니다.
+
+`add`는 플래그를 스키마(zod)로 검증해 frontmatter를 만들고, 파일 생성 직후 `check`를
+자동 실행합니다. `remove`도 삭제 후 `check`를 돌려 깨진 위키링크를 바로 알려줍니다.
 
 ## check가 검사하는 것
 
