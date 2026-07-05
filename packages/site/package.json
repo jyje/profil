@@ -1,0 +1,11 @@
+{
+  "name": "@madang/site",
+  "version": "0.0.1",
+  "private": true,
+  "description": "포트폴리오 / 지식기반 / 이력서 탭을 담는 웹 템플릿 (M4에서 구현 시작)",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'M4: Astro(or Jekyll) 프로젝트로 초기화 예정'"
+  },
+  "dependencies": {}
+}

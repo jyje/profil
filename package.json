@@ -1,0 +1,19 @@
+{
+  "name": "madang",
+  "version": "0.0.1",
+  "private": true,
+  "description": "AI가 관리하는 포트폴리오 · 지식기반 · 포지션별 이력서 사이트 템플릿",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "echo 'TODO(M4): packages/site 개발 서버 연결'",
+    "build": "npm run build:design && npm run build:jari",
+    "build:design": "echo 'TODO(M2): tokens.yaml -> CSS vars + reference.docx'",
+    "build:jari": "npm run build --workspace=@madang/jari",
+    "test": "npm run test --workspace=@madang/jari"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}
