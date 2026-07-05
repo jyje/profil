@@ -18,7 +18,7 @@ jobs:
   release:
     runs-on: ubuntu-26.04-arm
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # full history + tags for the tag-exists guard
 
@@ -46,10 +46,10 @@ jobs:
             found { print }
           ' CHANGELOG.md > /tmp/release-notes.md
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.ver.outputs.exists == 'false'
         with:
-          node-version: 20
+          node-version: 24
           registry-url: "https://registry.npmjs.org"
 
       - run: npm ci
@@ -60,7 +60,7 @@ jobs:
 
       - name: Create tag + GitHub Release
         if: steps.ver.outputs.exists == 'false'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ steps.ver.outputs.version }}
           name: profil v${{ steps.ver.outputs.version }}

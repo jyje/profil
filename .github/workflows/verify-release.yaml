@@ -30,7 +30,7 @@ jobs:
         # whole matrix.
         shell: bash
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
 
@@ -38,9 +38,9 @@ jobs:
         id: ver
         run: echo "version=$(node -p "require('./packages/cli/package.json').version")" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install the published package globally
         run: npm install -g profil@${{ steps.ver.outputs.version }}
