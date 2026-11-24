@@ -8,7 +8,7 @@
   "scripts": {
     "test": "vitest run",
     "build": "tsc -b",
-    "prepare": "npm run build"
+    "prepare": "pnpm run build"
   },
   "dependencies": {
     "gray-matter": "^4.0.3",

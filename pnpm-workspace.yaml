@@ -1,0 +1,9 @@
+packages:
+  - packages/*
+
+# Install scripts: esbuild's postinstall only verifies/optimizes the platform
+# binary, which ships via its optionalDependencies, so it is not needed.
+# fsevents is an optional macOS file-watcher addon (prebuilt, no build needed).
+allowBuilds:
+  esbuild: false
+  fsevents: false

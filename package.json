@@ -3,17 +3,18 @@
   "version": "0.1.0-dev.0",
   "private": true,
   "description": "AI-managed portfolio / knowledge base / per-position resume site template",
-  "workspaces": [
-    "packages/*"
-  ],
+  "packageManager": "pnpm@12.23.0",
+  "engines": {
+    "node": ">=26 <27"
+  },
   "scripts": {
     "dev": "echo 'TODO(M4): wire up the packages/site dev server'",
-    "build": "npm run build:design && npm run build:packages",
+    "build": "pnpm run build:design && pnpm run build:packages",
     "build:design": "echo 'TODO(M2): tokens.yaml -> CSS vars + reference.docx'",
-    "build:packages": "npm run build --workspace=profil",
-    "test": "npm run test --workspaces --if-present",
+    "build:packages": "pnpm --filter ./packages/cli run build",
+    "test": "pnpm -r --if-present run test",
     "profil": "node packages/cli/dist/index.js",
-    "check": "npm run build:packages && npm run test --workspaces --if-present && node packages/cli/dist/index.js check"
+    "check": "pnpm run build:packages && pnpm -r --if-present run test && node packages/cli/dist/index.js check"
   },
   "devDependencies": {
     "typescript": "^6.0.3"

@@ -17,19 +17,20 @@
   "main": "./dist/cli.js",
   "files": ["dist/cli.js", "templates"],
   "engines": {
-    "node": ">=24"
+    "node": ">=26 <27"
   },
   "scripts": {
     "test": "vitest run",
     "build": "tsc -b",
-    "bundle": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node24 --external:yaml --banner:js=\"import{createRequire}from'node:module';const require=createRequire(import.meta.url);\" --outfile=dist/cli.js",
-    "prepare": "npm run build",
+    "bundle": "esbuild src/index.ts --bundle --platform=node --format=esm --target=node26 --external:yaml --banner:js=\"import{createRequire}from'node:module';const require=createRequire(import.meta.url);\" --outfile=dist/cli.js",
+    "prepare": "pnpm run build",
     "prepublishOnly": "npm run bundle"
   },
   "dependencies": {
     "yaml": "^2.9.0"
   },
   "devDependencies": {
+    "@profil/jari": "workspace:*",
     "@types/node": "^24.13.2",
     "esbuild": "^0.28.1",
     "gray-matter": "^4.0.3",
