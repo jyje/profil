@@ -26,14 +26,17 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - uses: pnpm/action-setup@v6.1.1
+
       - uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version-file: .nvmrc
+          cache: pnpm
           registry-url: "https://registry.npmjs.org"
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
       # check = package build (tsc) + workspace tests (vitest) + profil check
-      - run: npm run check
+      - run: pnpm run check
 
       - name: Compute the preview version
         id: ver
@@ -44,10 +47,10 @@ jobs:
           echo "::notice::publishing preview v$new under the dev dist-tag"
 
       - name: Set the preview version (not committed)
-        run: npm version "${{ steps.ver.outputs.version }}" --workspaces --include-workspace-root --no-git-tag-version
+        run: pnpm -r --include-workspace-root version "${{ steps.ver.outputs.version }}" --no-git-tag-version --no-git-checks
 
       # prepublishOnly bundles the package with esbuild automatically.
-      - run: npm publish --access public --tag dev --provenance
+      - run: pnpm publish --access public --tag dev --provenance --no-git-checks
         working-directory: packages/cli
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

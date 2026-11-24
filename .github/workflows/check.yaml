@@ -19,10 +19,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6.1.1
       - uses: actions/setup-node@v6
         with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
       # check = package build (tsc) + workspace tests (vitest) + profil check (static checks)
-      - run: npm run check
+      - run: pnpm run check

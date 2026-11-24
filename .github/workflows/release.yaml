@@ -61,16 +61,20 @@ jobs:
             : > /tmp/release-notes.md
           fi
 
+      - uses: pnpm/action-setup@v6.1.1
+        if: steps.ver.outputs.skip == 'false'
+
       - uses: actions/setup-node@v6
         if: steps.ver.outputs.skip == 'false'
         with:
-          node-version: 24
+          node-version-file: .nvmrc
+          cache: pnpm
           registry-url: "https://registry.npmjs.org"
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
         if: steps.ver.outputs.skip == 'false'
       # check = package build (tsc) + workspace tests (vitest) + profil check
-      - run: npm run check
+      - run: pnpm run check
         if: steps.ver.outputs.skip == 'false'
 
       - name: Create tag + GitHub Release
@@ -84,7 +88,7 @@ jobs:
       # prepublishOnly bundles the package with esbuild automatically.
       # --provenance attests (via GitHub Actions OIDC) that this publish came
       # from this workflow run — shown as a Provenance badge on the npm page.
-      - run: npm publish --access public --provenance
+      - run: pnpm publish --access public --provenance --no-git-checks
         if: steps.ver.outputs.skip == 'false'
         working-directory: packages/cli
         env:

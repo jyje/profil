@@ -38,6 +38,6 @@ apart when printed.
 ## Checklist for changes
 
 1. Edit `design/tokens.yaml`
-2. `npm run build:design` — regenerates the CSS variable file + reference.docx
-3. `npm run build` — rebuilds web/PDF/DOCX in full
+2. `pnpm run build:design` — regenerates the CSS variable file + reference.docx
+3. `pnpm run build` — rebuilds web/PDF/DOCX in full
 4. Compare the web, PDF, and DOCX outputs side by side to verify

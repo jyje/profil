@@ -40,14 +40,17 @@ jobs:
           ref: main
           fetch-depth: 0 # full tag history for git-cliff and version resolution
 
+      - uses: pnpm/action-setup@v6.1.1
+
       - uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version-file: .nvmrc
+          cache: pnpm
 
-      - run: npm ci
+      - run: pnpm install --frozen-lockfile
       # check = package build (tsc) + workspace tests (vitest) + profil check
       # (static content checks). Don't propose a release from a broken state.
-      - run: npm run check
+      - run: pnpm run check
 
       - name: Install git-cliff
         run: |
@@ -84,7 +87,7 @@ jobs:
           echo "::notice::proposing v$base -> v$new"
 
       - name: Bump workspace versions
-        run: npm version "${{ steps.ver.outputs.new }}" --workspaces --include-workspace-root --no-git-tag-version
+        run: pnpm -r --include-workspace-root version "${{ steps.ver.outputs.new }}" --no-git-tag-version --no-git-checks
 
       - name: Update CHANGELOG.md
         run: git-cliff --tag "v${{ steps.ver.outputs.new }}" -o CHANGELOG.md
@@ -112,7 +115,7 @@ jobs:
           branch: release/v${{ steps.ver.outputs.new }}
           add-paths: |
             package.json
-            package-lock.json
+            pnpm-lock.yaml
             packages/*/package.json
             CHANGELOG.md
           commit-message: "🔧 chore(release): propose v${{ steps.ver.outputs.new }}"

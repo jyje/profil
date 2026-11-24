@@ -33,7 +33,7 @@ export async function runClean(projectRoot: string, deep: boolean): Promise<bool
   }
 
   if (deep) {
-    console.log(dim("node_modules removed. Run `npm install` to reinstall."));
+    console.log(dim("node_modules removed. Run `pnpm install` to reinstall."));
   }
   return true;
 }

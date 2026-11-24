@@ -28,9 +28,9 @@ resume; HTML/PDF/DOCX are derived from it.
    or `reference.docx` directly — generate them from the tokens.
 5. **Always run the static checks after adding or editing content:**
    ```bash
-   npm run check   # = tsc build + vitest + profil check (schema/position/wikilink integrity)
+   pnpm run check   # = tsc build + vitest + profil check (schema/position/wikilink integrity)
    ```
-   If you only changed content, `npm run profil -- check` (or `npx profil check`)
+   If you only changed content, `pnpm profil check`
    is enough. Resolve any schema violation or link-integrity error (a
    `[[wikilink]]` pointing at a note that doesn't exist) before moving on.
 6. **Summarize the diff for the human before committing.** Resume/portfolio
@@ -45,7 +45,7 @@ resume; HTML/PDF/DOCX are derived from it.
    does the schema validation in one step.
 2. Infer the relevant position tag(s) (check `positions.md`, ask if unclear).
 3. Link to related notes/portfolio entries via the `links:` field if any exist.
-4. Verify with `npm run check`.
+4. Verify with `pnpm run check`.
 5. Summarize the change and confirm before committing.
 
 ## Don'ts

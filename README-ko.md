@@ -63,26 +63,26 @@ profil/
 
 ```bash
 git clone https://github.com/jyje/profil.git && cd profil
-npm install         # 설치 시 packages/{jari,cli}가 자동 빌드됨 (prepare)
-npm run check       # 정적 테스트: tsc 빌드 + vitest + profil check
-npm run dev        # 로컬 미리보기 (M4)
-npm run build       # HTML + PDF + DOCX 전체 매트릭스 빌드 (M2)
+pnpm install        # 설치 시 packages/{jari,cli}가 자동 빌드됨 (prepare)
+pnpm run check       # 정적 테스트: tsc 빌드 + vitest + profil check
+pnpm run dev        # 로컬 미리보기 (M4)
+pnpm run build       # HTML + PDF + DOCX 전체 매트릭스 빌드 (M2)
 ```
 
 ## 내부 CLI (`profil`)
 
 ```bash
-npx profil init            # 현재 디렉토리에 프로젝트 완전 초기화 (템플릿 스캐폴드 + 검사)
-npx profil init --home     # 사용자 데이터 홈(~/.profil)에 초기화
-npx profil init --force    # profil.config.yaml, content/resume, dist를 템플릿으로 재생성
+pnpm dlx profil init            # 현재 디렉토리에 프로젝트 완전 초기화 (템플릿 스캐폴드 + 검사)
+pnpm dlx profil init --home     # 사용자 데이터 홈(~/.profil)에 초기화
+pnpm dlx profil init --force    # profil.config.yaml, content/resume, dist를 템플릿으로 재생성
                            # (content/notes, content/portfolio는 절대 덮어쓰지 않음)
-npx profil check           # 정적 검사: 설정/콘텐츠 스키마, 포지션 태그·위키링크 무결성
-npx profil build           # 포지션별 이력서를 조립해 dist/로 출력 (md, html)
-npx profil build --position mlops --format md   # 포지션/포맷 하나만 선택
-npx profil list [섹션]      # 이력 목록 (experience|projects|education|positions|skills)
-npx profil add experience --company "ACME" --role "Engineer" --start 2024-01 --positions mlops
-npx profil remove experience/acme.md   # 경로는 content/resume 기준
-npx profil clean [--deep]  # 빌드 산출물 정리 (--deep: node_modules까지)
+pnpm dlx profil check           # 정적 검사: 설정/콘텐츠 스키마, 포지션 태그·위키링크 무결성
+pnpm dlx profil build           # 포지션별 이력서를 조립해 dist/로 출력 (md, html)
+pnpm dlx profil build --position mlops --format md   # 포지션/포맷 하나만 선택
+pnpm dlx profil list [섹션]      # 이력 목록 (experience|projects|education|positions|skills)
+pnpm dlx profil add experience --company "ACME" --role "Engineer" --start 2024-01 --positions mlops
+pnpm dlx profil remove experience/acme.md   # 경로는 content/resume 기준
+pnpm dlx profil clean [--deep]  # 빌드 산출물 정리 (--deep: node_modules까지)
 ```
 
 **데이터 홈** — 로컬 도구로 설치하면 사용자 데이터는 `~/.profil/`에 쌓입니다
@@ -93,7 +93,7 @@ npx profil clean [--deep]  # 빌드 산출물 정리 (--deep: node_modules까지
 재정의할 수 있습니다. 모든 명령의 프로젝트 루트 해석 순서는 `--root <dir>` 플래그 →
 현재 디렉토리부터 상향 탐색 → 데이터 홈 폴백입니다.
 
-CI(`.github/workflows/check.yaml`)도 같은 단일 진입점인 `npm run check`를 실행합니다.
+CI(`.github/workflows/check.yaml`)도 같은 단일 진입점인 `pnpm run check`를 실행합니다.
 자세한 검사 항목은 `packages/cli/README.md`를 참고하세요.
 
 ## 로드맵

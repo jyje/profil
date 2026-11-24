@@ -2,7 +2,7 @@
 # Single source of design truth. CSS variables, print CSS, and reference.docx
 # styles are all generated from here.
 # Don't hand-edit CSS or .docx directly — change this file and run
-# `npm run build:design`.
+# `pnpm run build:design`.
 
 color:
   background: "#ffffff"

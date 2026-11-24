@@ -3,20 +3,20 @@
 The internal CLI for the Profil project. Provides full initialization
 (`init`), static checks (`check`), per-position resume builds (`build`),
 resume management (`add`/`list`/`remove`), and cleanup (`clean`). Published
-to npm as the unscoped `profil` package, so `npx profil` works right away.
+to npm as the unscoped `profil` package, so `pnpm dlx profil` (or `npx profil`) works right away.
 
 ```bash
-npx profil init            # scaffold + check in the current directory
-npx profil init --home     # initialize the user data home (~/.profil) instead
-npx profil init --force    # regenerate profil.config.yaml, content/resume, dist from templates
-npx profil check           # static checks (also run in CI)
-npx profil build           # assemble + render per-position resumes into dist/
-npx profil list [section]  # list resume entries (experience|projects|education|positions|skills)
-npx profil add experience --company "ACME" --role "Engineer" --start 2024-01 \
+pnpm dlx profil init            # scaffold + check in the current directory
+pnpm dlx profil init --home     # initialize the user data home (~/.profil) instead
+pnpm dlx profil init --force    # regenerate profil.config.yaml, content/resume, dist from templates
+pnpm dlx profil check           # static checks (also run in CI)
+pnpm dlx profil build           # assemble + render per-position resumes into dist/
+pnpm dlx profil list [section]  # list resume entries (experience|projects|education|positions|skills)
+pnpm dlx profil add experience --company "ACME" --role "Engineer" --start 2024-01 \
     --end present --positions mlops,backend
-npx profil add project --title "..." [--url ...] / add education / add position
-npx profil remove experience/acme.md   # path is relative to content/resume
-npx profil clean [--deep]  # remove build outputs (--deep: node_modules too)
+pnpm dlx profil add project --title "..." [--url ...] / add education / add position
+pnpm dlx profil remove experience/acme.md   # path is relative to content/resume
+pnpm dlx profil clean [--deep]  # remove build outputs (--deep: node_modules too)
 ```
 
 ## Data home (`~/.profil`, `~/.profil-dev` for dev builds)
@@ -96,10 +96,10 @@ runnable. The only external runtime dependency is `yaml` (kept in
 `dependencies` and passed `--external:yaml` due to a CJS-interop issue).
 
 ```bash
-npm run bundle --workspace=profil   # produces dist/cli.js (esbuild)
+pnpm --filter ./packages/cli run bundle   # produces dist/cli.js (esbuild)
 ```
 
-`npm publish` runs this automatically via the `prepublishOnly` hook, so manual
+`pnpm publish` runs this automatically via the `prepublishOnly` hook, so manual
 bundling isn't needed. The `files` field restricts the published tarball to
 `dist/cli.js` and `templates/`, so `src/`, tests, and monorepo workspace
 references never leak into the published package.
@@ -107,7 +107,7 @@ references never leak into the published package.
 Verifying in full isolation (outside the monorepo):
 
 ```bash
-cd packages/cli && npm pack
+cd packages/cli && pnpm pack
 npm install -g ./profil-<version>.tgz
 profil --version && profil init   # in a scratch directory
 npm uninstall -g profil
@@ -127,7 +127,7 @@ Three workflows carry out the release:
    `packages/cli/package.json`'s version changes on `main` (i.e. once the
    proposal PR above is merged). Tags `vX.Y.Z`, cuts a GitHub Release from the
    matching `CHANGELOG.md` section, and runs
-   `npm publish --access public --provenance`.
+   `pnpm publish --access public --provenance --no-git-checks`.
 3. **`.github/workflows/verify-release.yaml`** — after a successful release,
    installs the just-published version globally in a clean environment and
    runs `profil init`/`check` as a smoke test.
